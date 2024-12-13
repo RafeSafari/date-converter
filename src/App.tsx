@@ -9,9 +9,9 @@ import { DarkMode, LightMode } from "@mui/icons-material";
 import { AppBar, Toolbar, Typography, IconButton, Box } from '@mui/material';
 
 // Routes
-import Error404 from "./Pages/404";
-import ConvertDate from "./Pages/ConvertDate";
-import DateDiffCalculator from "./Pages/DateDiffCalculator";
+import Error404 from "./pages/404";
+import ConvertDate from "./pages/ConvertDate";
+import DateDiffCalculator from "./pages/DateDiffCalculator";
 
 function App() {
   // Initialize state based on localStorage
