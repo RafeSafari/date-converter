@@ -33,7 +33,6 @@ const ConvertDate = () => {
     setSourceDay(initialDate.day());
     setSourceMonth(initialDate.month());
     setSourceYear(initialDate.year());
-    console.log('initialDate', initialDate.year())
   }, [sourceCalendar])
 
   const [daysInMonth, setDaysInMonth] = useState(31);
