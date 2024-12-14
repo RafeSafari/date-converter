@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, Divider } from '@mui/material';
 import Jalali from "calendars/Jalali";
 import Gregorian from "calendars/Gregorian";
 import { ChevronLeft } from "@mui/icons-material";
@@ -26,6 +26,11 @@ const ConvertDate = () => {
   const [sourceDay, setSourceDay] = useState(1);
   const [sourceMonth, setSourceMonth] = useState(1);
   const [sourceYear, setSourceYear] = useState(1400);
+
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  useEffect(() => {
+    setSelectedDate(new sourceCalendar.component(`${sourceYear}-${sourceMonth}-${sourceDay}`).date);
+  }, [sourceDay, sourceMonth, sourceYear]);
 
   // reinit inputs on source calendar change
   useEffect(() => {
@@ -83,7 +88,7 @@ const ConvertDate = () => {
           </Typography>
 
           <Button 
-            variant="contained" 
+            variant="text" 
             color="primary" 
             component={Link} 
             to="/diff"
@@ -125,7 +130,7 @@ const ConvertDate = () => {
           gap: 2,
         }}>
           <Typography variant="h6" component="h6" gutterBottom>
-            تاریخ جلالی (شمسی) را انتخاب کنید
+            تاریخ {sourceCalendar.title} {sourceCalendar.title_alt && `(${sourceCalendar.title_alt})`} را انتخاب کنید:
           </Typography>
 
           <Box sx={{
@@ -171,46 +176,29 @@ const ConvertDate = () => {
                 sx={{ width: 100 }}
               />
             {/* </>} */}
-            
-            {/* Gregorian inputs */}
-            {/* {sourceCalendar.name === "Gregorian" && <>
-              <Select
-                label="روز"
-                options={
-                  Array.from({ length: daysInMonth }, (_, index) => ({
-                    title: `${index + 1}`,
-                    value: index + 1,
-                  }))
-                }
-                value={sourceDay}
-                onChange={(value) => {setSourceDay(value)}}
-                sx={{ width: 80 }}
-              />
-
-              <Select
-                label="ماه"
-                options={
-                  sourceCalendar.component.getMonths().map((month, index) => ({
-                    title: month,
-                    value: index + 1,
-                  }))
-                }
-                value={sourceMonth}
-                onChange={(value) => {setSourceMonth(value)}}
-                sx={{ width: 80 }}
-              />
-
-              <TextField
-                label="سال"
-                type="number"
-                value={sourceYear}
-                onChange={(value) => {setSourceYear(Number(value))}}
-                sx={{ width: 100 }}
-              />
-            </>} */}
           </Box>
+        </Box>
 
+        <Divider sx={{ width: '100%', marginY: 1 }} />
 
+        {/* Results */}
+        <Box sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 2,
+        }}>
+          {calendars.filter(calendar => calendar.name !== sourceCalendar.name).map(calendar => (
+            <Box key={calendar.name} sx={{display: "flex", flexDirection: "row", gap: 1}}>
+              <Typography variant="h6">
+                معادل {calendar.title}{calendar.title_alt && ` (${calendar.title_alt})`}:
+              </Typography>
+              <Typography variant="h6">{new calendar.component(selectedDate).format("D")}</Typography>
+              <Typography variant="h6">{new calendar.component(selectedDate).format("MMMM")}</Typography>
+              <Typography variant="h6">{new calendar.component(selectedDate).format("YYYY")}</Typography>
+            </Box>
+          ))}
         </Box>
 
       </Box>

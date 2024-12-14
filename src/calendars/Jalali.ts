@@ -8,7 +8,7 @@ export default class Jalali implements iCalendar {
     if (typeof date === "undefined") {
       this.date = new Date();
     } else if (typeof date === "string") {
-      this.date = JalaliMoment(date).toDate();
+      this.date = JalaliMoment(date, "jYYYY/jMM/jDD").toDate();
     } else if (date instanceof Date) {
       this.date = date;
     } else if ("valueOf" in date && date.valueOf() instanceof Date) {
