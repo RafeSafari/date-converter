@@ -41,7 +41,11 @@ export default class Jalali implements iCalendar {
   }
 
   format(format: string = "YYYY/MM/DD"): string {
-    return JalaliMoment(this.date).locale('fa').format(format);
+    try {
+      return JalaliMoment(this.date).locale('fa').format(format);
+    } catch {
+      return '-';
+    }
   }
 
   unixDays(): number {

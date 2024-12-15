@@ -6,6 +6,7 @@ import Gregorian from "calendars/Gregorian";
 import { ChevronLeft } from "@mui/icons-material";
 import Select from "components/Select";
 import TextField from "components/TextField";
+import toast from "react-hot-toast";
 
 const calendars = [{
   name: "Jalali",
@@ -28,9 +29,26 @@ const ConvertDate = () => {
   const [sourceYear, setSourceYear] = useState(1400);
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  useEffect(() => {
-    setSelectedDate(new sourceCalendar.component(`${sourceYear}-${sourceMonth}-${sourceDay}`).date);
-  }, [sourceDay, sourceMonth, sourceYear]);
+
+  const confirmSelectedDate = () => {
+    try {
+      const _calendar = new sourceCalendar.component(`${sourceYear}-${sourceMonth}-${sourceDay}`);
+      if (!_calendar.date) {
+        throw new Error("Invalid date");
+      } else if (_calendar.day() !== sourceDay) {
+        throw new Error("Invalid Day");
+      } else if (_calendar.month() !== sourceMonth) {
+        throw new Error("Invalid Month");
+      } else if (_calendar.year() !== sourceYear) {
+        throw new Error("Invalid Year");
+      } else {
+        setSelectedDate(_calendar.date);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("تاریخ انتخاب شده صحیح نیست");
+    }
+  }
 
   // reinit inputs on source calendar change
   useEffect(() => {
@@ -175,6 +193,14 @@ const ConvertDate = () => {
                 onChange={(value) => {setSourceYear(Number(value))}}
                 sx={{ width: 100 }}
               />
+
+              <Button 
+                variant="contained" 
+                color="primary" 
+                onClick={confirmSelectedDate}
+              >
+                تبدیل
+              </Button>
             {/* </>} */}
           </Box>
         </Box>
@@ -192,7 +218,7 @@ const ConvertDate = () => {
           {calendars.filter(calendar => calendar.name !== sourceCalendar.name).map(calendar => (
             <Box key={calendar.name} sx={{display: "flex", flexDirection: "row", gap: 1}}>
               <Typography variant="h6">
-                معادل {calendar.title}{calendar.title_alt && ` (${calendar.title_alt})`}:
+                {calendar.title}{calendar.title_alt && ` (${calendar.title_alt})`}:
               </Typography>
               <Typography variant="h6">{new calendar.component(selectedDate).format("D")}</Typography>
               <Typography variant="h6">{new calendar.component(selectedDate).format("MMMM")}</Typography>
