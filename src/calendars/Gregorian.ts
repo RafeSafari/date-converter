@@ -1,18 +1,21 @@
-import iCalendar from "./iCalendar";
 import moment from "moment";
 
 export default class Gregorian implements iCalendar {
   date: Date;
 
-  constructor(date?: Date | string | iCalendar) {
-    if (typeof date === "undefined") {
+  constructor(input?: Date | string | iCalendar | {year:number, month:number, day:number} | number[]) {
+    if (typeof input === "undefined") {
       this.date = new Date();
-    } else if (typeof date === "string") {
-      this.date = moment(date).toDate();
-    } else if (date instanceof Date) {
-      this.date = date;
-    } else if ("valueOf" in date && date.valueOf() instanceof Date) {
-      this.date = date.valueOf();
+    } else if (typeof input === "string") {
+      this.date = moment(input).toDate();
+    } else if (Array.isArray(input)) {
+      this.date = moment({ year: input[0], month: input[1], day: input[2] }).toDate();
+    } else if (input instanceof Date) {
+      this.date = input;
+    } else if (typeof input?.year === "number" && typeof input?.month === "number" && typeof input?.day === "number") {
+      this.date = moment({ year: input?.year, month: input?.month-1, day: input?.day }).toDate();
+    } else if ('valueOf' in input && typeof input.valueOf === 'function') {
+      this.date = new Date(Number(input.valueOf()));
     } else {
       throw new Error("Invalid argument type");
     }
@@ -48,5 +51,9 @@ export default class Gregorian implements iCalendar {
 
   year(): number {
     return moment(this.date).year();
+  }
+
+  getParts(): string[] {
+    return this.format("YYYY MMMM D").split(" ");
   }
 }

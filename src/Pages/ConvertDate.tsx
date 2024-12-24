@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Box, Typography, Button, Divider } from '@mui/material';
 import Jalali from "calendars/Jalali";
 import Gregorian from "calendars/Gregorian";
+import Badi from "calendars/Badi";
 import { ChevronLeft } from "@mui/icons-material";
 import Select from "components/Select";
 import TextField from "components/TextField";
@@ -18,6 +19,11 @@ const calendars = [{
   title: "میلادی",
   title_alt: null,
   component: Gregorian,
+}, {
+  name: "Badi",
+  title: "بدیع",
+  title_alt: null,
+  component: Badi,
 }]
 
 const ConvertDate = () => {
@@ -32,7 +38,8 @@ const ConvertDate = () => {
 
   const confirmSelectedDate = () => {
     try {
-      const _calendar = new sourceCalendar.component(`${sourceYear}-${sourceMonth}-${sourceDay}`);
+      const _calendar = new sourceCalendar.component({ year: sourceYear, month: sourceMonth, day: sourceDay });
+      console.log('_calendar.date', _calendar.date)
       if (!_calendar.date) {
         throw new Error("Invalid date");
       } else if (_calendar.day() !== sourceDay) {
@@ -215,14 +222,14 @@ const ConvertDate = () => {
           justifyContent: 'center',
           gap: 2,
         }}>
-          {calendars.filter(calendar => calendar.name !== sourceCalendar.name).map(calendar => (
+          {calendars.map(calendar => (
             <Box key={calendar.name} sx={{display: "flex", flexDirection: "row", gap: 1}}>
               <Typography variant="h6">
                 {calendar.title}{calendar.title_alt && ` (${calendar.title_alt})`}:
               </Typography>
-              <Typography variant="h6">{new calendar.component(selectedDate).format("D")}</Typography>
-              <Typography variant="h6">{new calendar.component(selectedDate).format("MMMM")}</Typography>
-              <Typography variant="h6">{new calendar.component(selectedDate).format("YYYY")}</Typography>
+              {new calendar.component(selectedDate).getParts().reverse().map(part => (
+                <Typography variant="h6">{part}</Typography>
+              ))}
             </Box>
           ))}
         </Box>
