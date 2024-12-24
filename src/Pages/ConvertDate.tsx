@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, Typography, Button, Divider } from '@mui/material';
 import Jalali from "calendars/Jalali";
@@ -64,22 +64,19 @@ const ConvertDate = () => {
 
   // reinit inputs on source calendar change
   useEffect(() => {
-    const initialDate = new sourceCalendar.component();
-    setSourceDay(initialDate.day());
-    setSourceMonth(initialDate.month());
+    const initialDate = new sourceCalendar.component(selectedDate);
     setSourceYear(initialDate.year());
-  }, [sourceCalendar])
+    setSourceMonth(initialDate.month());
+    setSourceDay(initialDate.day());
+  }, [sourceCalendar]);
 
-  const [daysInMonth, setDaysInMonth] = useState(31);
-  useEffect(() => {
-    setDaysInMonth(sourceCalendar.component.getDayInMonth(sourceMonth, sourceYear));
-  }, [sourceMonth, sourceYear])
+  const daysInMonth = useMemo(() => sourceCalendar.component.getDayInMonth(sourceMonth, sourceYear), [sourceMonth, sourceYear]);
 
   useEffect(() => {
     if (daysInMonth < sourceDay) {
       setSourceDay(daysInMonth);
     }
-  }, [daysInMonth])
+  }, [daysInMonth]);
 
   return (
     <Box 
@@ -150,7 +147,7 @@ const ConvertDate = () => {
             }
             value={sourceCalendar}
             onChange={(value) => {setSourceCalendar(value)}}
-            sx={{ width: 160 }}
+            sx={{ width: 180 }}
           />
         </Box>
 
@@ -241,8 +238,8 @@ const ConvertDate = () => {
               <Typography variant="h6">
                 {calendar.title}{calendar.title_alt ? <Typography variant="caption"> ({calendar.title_alt})</Typography>: ''}:
               </Typography>
-              {new calendar.component(selectedDate).getParts().reverse().map(part => (
-                <Typography variant="h6">{part}</Typography>
+              {new calendar.component(selectedDate).getParts().reverse().map((part, i) => (
+                <Typography key={i} variant="h6">{part}</Typography>
               ))}
             </Box>
           ))}
