@@ -56,7 +56,7 @@ export default class Jalali implements iCalendar {
     return this.date;
   }
 
-  format(format: string = "YYYY/MM/DD"): string {
+  format(format: string = "jYYYY/jMM/jDD"): string {
     try {
       return JalaliMoment(this.date).locale('fa').format(format);
     } catch {
@@ -81,6 +81,6 @@ export default class Jalali implements iCalendar {
   }
 
   getParts(): string[] {
-    return this.format("YYYY MMMM D").split(" ");
+    return this.format("jYYYY jMMMM jD").split(" ");
   }
 }

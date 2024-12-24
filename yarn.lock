@@ -2443,6 +2443,13 @@
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.5.tgz#1ef302e01cf7d2b5a0fa526790c9123bf1d06690"
   integrity sha512-/pyBZWSLD2n0dcHE3hq8s8ZvcETHtEuF+3E7XVt0Ig2nvsVQXdghHVcEkIWjy9A0wKfTn97a/PSDYohKIlnP/w==
 
+"@types/moment-hijri@^2.1.4":
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/@types/moment-hijri/-/moment-hijri-2.1.4.tgz#02c3a6f774a241efd9b4c46c8ef8bbd006996e47"
+  integrity sha512-pGX1DaSducJDkJAC3q8fCuemow0pzI4oa0iKcspwQNPXuwlI55WRgBVrA6NVi+rf8bZN1qjWVsGdUatrLhZk6Q==
+  dependencies:
+    moment ">=2.14.0"
+
 "@types/node-forge@^1.3.0":
   version "1.3.11"
   resolved "https://registry.yarnpkg.com/@types/node-forge/-/node-forge-1.3.11.tgz#0972ea538ddb0f4d9c2fa0ec5db5724773a604da"
@@ -7667,7 +7674,7 @@ moment-hijri@^3.0.0:
   dependencies:
     moment "^2.30.1"
 
-moment@^2.26.0, moment@^2.30.1:
+moment@>=2.14.0, moment@^2.26.0, moment@^2.30.1:
   version "2.30.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==

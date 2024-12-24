@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { JSX, useEffect, useState } from "react";
 import { FormControl, InputLabel, Select as MaterialSelect, MenuItem, SxProps } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import rtlPlugin from "stylis-plugin-rtl";
@@ -13,7 +13,7 @@ const cacheRtl = createCache({
 });
 
 interface Option {
-  title: string;
+  title: string | JSX.Element;
   value: any;
 }
 
@@ -27,8 +27,8 @@ interface SelectProps {
 }
 
 const Select: React.FC<SelectProps> = ({ label, options, onChange, value = '', size = 'medium', sx = {} }) => {
+  const [selectedIndex, setSelectedIndex] = useState<number | ''>('');
 
-  const [selectedIndex, setSelectedIndex] = useState<number|''>('');
   const handleChange = (event: any) => {
     const index = Number(event?.target?.value);
     setSelectedIndex(index);
@@ -41,7 +41,7 @@ const Select: React.FC<SelectProps> = ({ label, options, onChange, value = '', s
 
   useEffect(() => {
     setSelectedIndex(options.findIndex(option => isEqualObjects(option.value, value)));
-  }, [value])
+  }, [value]);
 
   return (
     <CacheProvider value={cacheRtl}>
@@ -55,12 +55,16 @@ const Select: React.FC<SelectProps> = ({ label, options, onChange, value = '', s
           value={selectedIndex}
           sx={{
             ...sx,
-            textAlign: "start",
+            textAlign: "left",
           }}
           variant="outlined"
           size={size === "small" ? "small" : "medium"}
         >
-          {options.map((option, i) => <MenuItem key={i} value={i}>{option.title}</MenuItem>)}
+          {options.map((option, i) => (
+            <MenuItem key={i} value={i} sx={{ justifyContent: 'flex-end' }}>
+              {option.title}
+            </MenuItem>
+          ))}
         </MaterialSelect>
       </FormControl>
     </CacheProvider>

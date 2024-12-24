@@ -9,6 +9,7 @@
     "@mui/material": "^6.1.10",
     "@mui/system": "^6.1.10",
     "@types/jest": "^29.5.14",
+    "@types/moment-hijri": "^2.1.4",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
     "@types/suncalc": "^1.9.2",

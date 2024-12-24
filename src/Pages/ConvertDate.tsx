@@ -4,6 +4,7 @@ import { Box, Typography, Button, Divider } from '@mui/material';
 import Jalali from "calendars/Jalali";
 import Gregorian from "calendars/Gregorian";
 import Badi from "calendars/Badi";
+import Islamic from "calendars/Islamic";
 import { ChevronLeft } from "@mui/icons-material";
 import Select from "components/Select";
 import TextField from "components/TextField";
@@ -11,19 +12,24 @@ import toast from "react-hot-toast";
 
 const calendars = [{
   name: "Jalali",
-  title: "جلالی",
-  title_alt: "شمسی",
+  title: "شمسی",
+  title_alt: "جلالی",
   component: Jalali,
 }, {
   name: "Gregorian",
   title: "میلادی",
-  title_alt: null,
+  title_alt: "گِرِگوری",
   component: Gregorian,
 }, {
   name: "Badi",
   title: "بدیع",
-  title_alt: null,
+  title_alt: "بهایی",
   component: Badi,
+}, {
+  name: "Islamic",
+  title: "هجری قمری",
+  title_alt: "أم القرى",
+  component: Islamic,
 }]
 
 const ConvertDate = () => {
@@ -135,7 +141,10 @@ const ConvertDate = () => {
             label="تقویم منبع"
             options={
               calendars.map(calendar => ({
-                title: `${calendar.title}${calendar.title_alt ? ` - ${calendar.title_alt}` : ''}`,
+                title: <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.25rem", direction: "ltr" }}>
+                  <Typography>{calendar.title}</Typography>
+                  {calendar.title_alt ? <Typography variant="caption">({calendar.title_alt})</Typography> : ''}
+                </Box>,
                 value: calendar,
               }))
             }
@@ -154,7 +163,13 @@ const ConvertDate = () => {
           gap: 2,
         }}>
           <Typography variant="h6" component="h6" gutterBottom>
-            تاریخ {sourceCalendar.title} {sourceCalendar.title_alt && `(${sourceCalendar.title_alt})`} را انتخاب کنید:
+
+            {/* <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.25rem", direction: "ltr" }}>
+              <Typography>{calendar.title}</Typography>
+              {calendar.title_alt ? <Typography variant="caption">({calendar.title_alt})</Typography> : ''}
+            </Box> */}
+            تاریخ {sourceCalendar.title} را انتخاب کنید:
+            {/* تاریخ {sourceCalendar.title} {sourceCalendar.title_alt && `(${sourceCalendar.title_alt})`} را انتخاب کنید: */}
           </Typography>
 
           <Box sx={{
@@ -224,7 +239,7 @@ const ConvertDate = () => {
           {calendars.filter(calendar => calendar.name !== sourceCalendar.name).map(calendar => (
             <Box key={calendar.name} sx={{display: "flex", flexDirection: "row", gap: 1}}>
               <Typography variant="h6">
-                {calendar.title}{calendar.title_alt && ` (${calendar.title_alt})`}:
+                {calendar.title}{calendar.title_alt ? <Typography variant="caption"> ({calendar.title_alt})</Typography>: ''}:
               </Typography>
               {new calendar.component(selectedDate).getParts().reverse().map(part => (
                 <Typography variant="h6">{part}</Typography>
