@@ -1,4 +1,3 @@
-import BadiDateLocal from "lib/Badi";
 import { BadiDate } from "badidate";
 import moment from "moment";
 
@@ -27,36 +26,36 @@ export default class Badi implements iCalendar {
     return moment((badiDayNumber - 45943) * 86_400_000).toDate();
   }
 
-  static getMonths(): string[] {
+  static getMonths(): {name: string, value: number}[] {
     return [
-      "شهرالبهاء",
-      "شهرالجلال",
-      "شهرالجمال",
-      "شهرالعظمة",
-      "شهرالنور",
-      "شهرالرحمة",
-      "شهرالكلمات",
-      "شهرالكمال",
-      "شهرالاسماء",
-      "شهرالعزة",
-      "شهرالمشية",
-      "شهرالعلم",
-      "شهرالقدرة",
-      "شهرالقول",
-      "شهرالمسائل",
-      "شهرالشرف",
-      "شهرالسلطان",
-      "شهرالملك",
-      "ایام هاء",
-      "شهرالعلاء",
+      { value: 1, name: "شهرالبهاء", },
+      { value: 2, name: "شهرالجلال", },
+      { value: 3, name: "شهرالجمال", },
+      { value: 4, name: "شهرالعظمة", },
+      { value: 5, name: "شهرالنور", },
+      { value: 6, name: "شهرالرحمة", },
+      { value: 7, name: "شهرالكلمات", },
+      { value: 8, name: "شهرالكمال", },
+      { value: 9, name: "شهرالاسماء", },
+      { value: 10, name: "شهرالعزة", },
+      { value: 11, name: "شهرالمشية", },
+      { value: 12, name: "شهرالعلم", },
+      { value: 13, name: "شهرالقدرة", },
+      { value: 14, name: "شهرالقول", },
+      { value: 15, name: "شهرالمسائل", },
+      { value: 16, name: "شهرالشرف", },
+      { value: 17, name: "شهرالسلطان", },
+      { value: 18, name: "شهرالملك", },
+      { value: 20, name: "ایام هاء", },
+      { value: 19, name: "شهرالعلاء", },
     ];
   }
 
   static getDayInMonth(month: number, year: number): number {
-    if (month == 19) {
-      return new BadiDate(`${year}-${month}-2`).ayyamiHaLength;
-    } else {
+    if (month < 20) {
       return 19;
+    } else {
+      return new BadiDate({year, month: 20, day: 2}).ayyamiHaLength;
     }
   }
 

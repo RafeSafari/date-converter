@@ -182,9 +182,9 @@ const ConvertDate = () => {
               <Select
                 label="ماه"
                 options={
-                  sourceCalendar.component.getMonths().map((month, index) => ({
-                    title: month,
-                    value: index + 1,
+                  sourceCalendar.component.getMonths().map(month => ({
+                    title: month.name,
+                    value: month.value,
                   }))
                 }
                 value={sourceMonth}

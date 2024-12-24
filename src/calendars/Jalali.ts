@@ -21,8 +21,21 @@ export default class Jalali implements iCalendar {
     }
   }
 
-  static getMonths(): string[] {
-    return ["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور","مهر","آبان","آذر","دی","بهمن","اسفند"];
+  static getMonths(): {name: string, value: number}[] {
+    return [
+      { value: 1,  name: "فروردین" },
+      { value: 2,  name: "اردیبهشت" },
+      { value: 3,  name: "خرداد" },
+      { value: 4,  name: "تیر" },
+      { value: 5,  name: "مرداد" },
+      { value: 6,  name: "شهریور" },
+      { value: 7,  name: "مهر" },
+      { value: 8,  name: "آبان" },
+      { value: 9,  name: "آذر" },
+      { value: 10, name: "دی" },
+      { value: 11, name: "بهمن" },
+      { value: 12, name: "اسفند" },
+    ];
   }
 
   static getDayInMonth(month: number, year: number): number {
