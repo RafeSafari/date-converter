@@ -39,7 +39,6 @@ const ConvertDate = () => {
   const confirmSelectedDate = () => {
     try {
       const _calendar = new sourceCalendar.component({ year: sourceYear, month: sourceMonth, day: sourceDay });
-      console.log('_calendar.date', _calendar.date)
       if (!_calendar.date) {
         throw new Error("Invalid date");
       } else if (_calendar.day() !== sourceDay) {
@@ -222,7 +221,7 @@ const ConvertDate = () => {
           justifyContent: 'center',
           gap: 2,
         }}>
-          {calendars.map(calendar => (
+          {calendars.filter(calendar => calendar.name !== sourceCalendar.name).map(calendar => (
             <Box key={calendar.name} sx={{display: "flex", flexDirection: "row", gap: 1}}>
               <Typography variant="h6">
                 {calendar.title}{calendar.title_alt && ` (${calendar.title_alt})`}:

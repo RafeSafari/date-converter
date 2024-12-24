@@ -15,8 +15,6 @@ export default class Badi implements iCalendar {
     } else if (input instanceof Date) {
       this.date = input;
     } else if (typeof input?.year === "number" && typeof input?.month === "number" && typeof input?.day === "number") {
-      console.log('input', input)
-      console.log('valueOf', moment())
       this.date = Badi.badiDayNumberToStandardDate(new BadiDate({ year: input?.year, month: input?.month, day: input?.day }).valueOf());
     } else if ('valueOf' in input && typeof input.valueOf === 'function') {
       this.date = new Date(Number(input.valueOf()));
