@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Typography, Button, Divider } from '@mui/material';
+import { Box, Typography, Button, Divider, Grid2 as Grid } from '@mui/material';
 import Jalali from "calendars/Jalali";
 import Gregorian from "calendars/Gregorian";
 import Badi from "calendars/Badi";
@@ -81,10 +81,10 @@ const ConvertDate = () => {
   return (
     <Box 
       sx={{ 
-        padding: 3, 
+        padding: { xs: 2, sm: 4 },
         display: 'flex', 
         alignItems: 'center', 
-        justifyContent: 'center', 
+        justifyContent: 'center',
       }}
     >
       <title>تبدیل تاریخ</title>
@@ -93,39 +93,16 @@ const ConvertDate = () => {
           backgroundColor: 'background.paper',
           borderRadius: 2,
           textAlign: 'center', 
-          padding: 4,
+          padding: { xs: 2, sm: 4 },
           width: '100%',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
           gap: 2,
+          maxWidth: 1000,
         }}
       >
-        <Box sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 2,
-        }}>
-          <Typography variant="h4" component="h4" gutterBottom>
-            تبدیل تاریخ
-          </Typography>
-
-          <Button 
-            variant="text" 
-            color="primary" 
-            component={Link} 
-            to="/diff"
-            sx={{paddingInlineEnd: 1}}
-          >
-            محاسبه فاصله دو تاریخ
-            <ChevronLeft  />
-          </Button>
-        </Box>
-        
         <Box sx={{
           width: '100%',
           display: 'flex',
@@ -154,19 +131,13 @@ const ConvertDate = () => {
         <Box sx={{
           width: '100%',
           display: 'flex',
-          flexDirection: 'row',
+          flexDirection: { xs: 'column', sm: 'row' },
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: 2,
         }}>
-          <Typography variant="h6" component="h6" gutterBottom>
-
-            {/* <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.25rem", direction: "ltr" }}>
-              <Typography>{calendar.title}</Typography>
-              {calendar.title_alt ? <Typography variant="caption">({calendar.title_alt})</Typography> : ''}
-            </Box> */}
+          <Typography variant="h6" component="h6" gutterBottom sx={{whiteSpace: "nowrap"}}>
             تاریخ {sourceCalendar.title} را انتخاب کنید:
-            {/* تاریخ {sourceCalendar.title} {sourceCalendar.title_alt && `(${sourceCalendar.title_alt})`} را انتخاب کنید: */}
           </Typography>
 
           <Box sx={{
@@ -174,52 +145,60 @@ const ConvertDate = () => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
+            flexWrap: 'wrap',
+            width: { xs: '100%', sm: 'auto' },
             gap: 2,
           }}>
-            {/* Jalaali inputs */}
-            {/* {sourceCalendar.name === "Jalali" && <> */}
-              <Select
-                label="روز"
-                options={
-                  Array.from({ length: daysInMonth }, (_, index) => ({
-                    title: `${index + 1}`,
-                    value: index + 1,
-                  }))
-                }
-                value={sourceDay}
-                onChange={(value) => {setSourceDay(value)}}
-                sx={{ width: 80 }}
-              />
+            <Grid container spacing={1} sx={{ width: { xs: '100%', sm: 'auto' } }}>
+              <Grid size={3} minWidth={70}>
+                <Select
+                  label="روز"
+                  options={
+                    Array.from({ length: daysInMonth }, (_, index) => ({
+                      title: `${index + 1}`,
+                      value: index + 1,
+                    }))
+                  }
+                  value={sourceDay}
+                  onChange={(value) => {setSourceDay(value)}}
+                  sx={{ width: "100%" }}
+                />
+              </Grid>
 
-              <Select
-                label="ماه"
-                options={
-                  sourceCalendar.component.getMonths().map(month => ({
-                    title: month.name,
-                    value: month.value,
-                  }))
-                }
-                value={sourceMonth}
-                onChange={(value) => {setSourceMonth(value)}}
-                sx={{ width: 140 }}
-              />
+              <Grid size="grow" minWidth={100}>
+                <Select
+                  label="ماه"
+                  options={
+                    sourceCalendar.component.getMonths().map(month => ({
+                      title: month.name,
+                      value: month.value,
+                    }))
+                  }
+                  value={sourceMonth}
+                  onChange={(value) => {setSourceMonth(value)}}
+                  sx={{ width: "100%" }}
+                />
+              </Grid>
 
-              <TextField
-                label="سال"
-                type="number"
-                value={sourceYear}
-                onChange={(value) => {setSourceYear(Number(value))}}
-                sx={{ width: 100 }}
-              />
+              <Grid size={3} minWidth={70}>
+                <TextField
+                  label="سال"
+                  type="number"
+                  value={sourceYear}
+                  onChange={(value) => {setSourceYear(Number(value))}}
+                  sx={{ width: "100%" }}
+                />
+              </Grid>
+            </Grid>
 
-              <Button 
-                variant="contained" 
-                color="primary" 
-                onClick={confirmSelectedDate}
-              >
-                تبدیل
-              </Button>
-            {/* </>} */}
+            <Button
+              variant="contained"
+              color="primary" 
+              onClick={confirmSelectedDate}
+              sx={{ width: { xs: '100%', sm: 'auto' }, whiteSpace: "nowrap" }}
+            >
+              محاسبه تاریخ های دیگر
+            </Button>
           </Box>
         </Box>
 
@@ -243,6 +222,42 @@ const ConvertDate = () => {
               ))}
             </Box>
           ))}
+        </Box>
+
+        <Divider sx={{ width: '100%', marginY: 1 }} />
+
+        <Box sx={{
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 2,
+        }}>
+          {/* <Typography variant="h5" component="h5" gutterBottom>
+            تبدیل تاریخ
+          </Typography> */}
+
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            // justifyContent: 'space-between',
+            flexWrap: "wrap",
+            width: '100%',
+            gap: 1,
+          }}>
+            <Typography variant="h6" component="h6" width="100%">دیگر ابزار ها</Typography>
+            <Button 
+              variant="text" 
+              color="primary" 
+              component={Link} 
+              to="/diff"
+              sx={{paddingInlineEnd: 1}}
+            >
+              محاسبه فاصله دو تاریخ
+            </Button>
+          </Box>
         </Box>
 
       </Box>
