@@ -1,40 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Typography, Button, Divider, Grid2 as Grid } from '@mui/material';
-import Jalali from "calendars/Jalali";
-import Gregorian from "calendars/Gregorian";
-import Badi from "calendars/Badi";
-import Islamic from "calendars/Islamic";
-import { ChevronLeft } from "@mui/icons-material";
+import { Box, Typography, Button, Grid2 as Grid } from '@mui/material';
 import Select from "components/Select";
 import TextField from "components/TextField";
 import toast from "react-hot-toast";
-
-const calendars = [{
-  name: "Jalali",
-  title: "شمسی",
-  title_alt: "جلالی",
-  component: Jalali,
-}, {
-  name: "Gregorian",
-  title: "میلادی",
-  title_alt: "گِرِگوری",
-  component: Gregorian,
-}, {
-  name: "Badi",
-  title: "بدیع",
-  title_alt: "بهایی",
-  component: Badi,
-}, {
-  name: "Islamic",
-  title: "هجری قمری",
-  title_alt: "أم القرى",
-  component: Islamic,
-}]
+import CALENDARS from "calendars";
 
 const ConvertDate = () => {
 
-  const [sourceCalendar, setSourceCalendar] = useState(calendars[0]);
+  const [sourceCalendar, setSourceCalendar] = useState(CALENDARS[0]);
 
   const [sourceDay, setSourceDay] = useState(1);
   const [sourceMonth, setSourceMonth] = useState(1);
@@ -79,17 +53,21 @@ const ConvertDate = () => {
   }, [daysInMonth]);
 
   return (
-    <Box 
-      sx={{ 
+    <Box
+      sx={{
         padding: { xs: 2, sm: 4 },
-        display: 'flex', 
-        alignItems: 'center', 
+        display: 'flex',
+        flexDirection: "column",
+        gap: { xs: 2, sm: 4 },
+        alignItems: 'center',
         justifyContent: 'center',
       }}
     >
       <title>تبدیل تاریخ</title>
-      <Box 
-        sx={{ 
+
+      {/* input box */}
+      <Box
+        sx={{
           backgroundColor: 'background.paper',
           borderRadius: 2,
           textAlign: 'center', 
@@ -114,7 +92,7 @@ const ConvertDate = () => {
           <Select
             label="تقویم منبع"
             options={
-              calendars.map(calendar => ({
+              CALENDARS.map(calendar => ({
                 title: <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.25rem", direction: "ltr" }}>
                   <Typography>{calendar.title}</Typography>
                   {calendar.title_alt ? <Typography variant="caption">({calendar.title_alt})</Typography> : ''}
@@ -201,9 +179,24 @@ const ConvertDate = () => {
             </Button>
           </Box>
         </Box>
-
-        <Divider sx={{ width: '100%', marginY: 1 }} />
-
+      </Box>
+      
+      {/* result box */}
+      <Box
+        sx={{
+          backgroundColor: 'background.paper',
+          borderRadius: 2,
+          textAlign: 'center', 
+          padding: { xs: 2, sm: 4 },
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 2,
+          maxWidth: 1000,
+        }}
+      >
         {/* Results */}
         <Box sx={{
           display: 'flex',
@@ -212,7 +205,7 @@ const ConvertDate = () => {
           justifyContent: 'center',
           gap: 2,
         }}>
-          {calendars.filter(calendar => calendar.name !== sourceCalendar.name).map(calendar => (
+          {CALENDARS.filter(calendar => calendar.name !== sourceCalendar.name).map(calendar => (
             <Box key={calendar.name} sx={{display: "flex", flexDirection: "row", gap: 1}}>
               <Typography variant="h6">
                 {calendar.title}{calendar.title_alt ? <Typography variant="caption"> ({calendar.title_alt})</Typography>: ''}:
@@ -229,9 +222,24 @@ const ConvertDate = () => {
             </Box>
           ))}
         </Box>
-
-        <Divider sx={{ width: '100%', marginY: 1 }} />
-
+      </Box>
+      
+      {/* other links */}
+      <Box
+        sx={{
+          backgroundColor: 'background.paper',
+          borderRadius: 2,
+          textAlign: 'center', 
+          padding: { xs: 2, sm: 4 },
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 2,
+          maxWidth: 1000,
+        }}
+      >
         <Box sx={{
           width: '100%',
           display: 'flex',
@@ -240,15 +248,10 @@ const ConvertDate = () => {
           justifyContent: 'space-between',
           gap: 2,
         }}>
-          {/* <Typography variant="h5" component="h5" gutterBottom>
-            تبدیل تاریخ
-          </Typography> */}
-
           <Box sx={{
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            // justifyContent: 'space-between',
             flexWrap: "wrap",
             width: '100%',
             gap: 1,
@@ -265,7 +268,6 @@ const ConvertDate = () => {
             </Button>
           </Box>
         </Box>
-
       </Box>
     </Box>
   );
