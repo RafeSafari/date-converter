@@ -6,15 +6,6 @@ const common = {
   typography: {
     fontFamily: 'IranSans, Arial, sans-serif',
   },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: `
-        html, body {
-          direction: rtl;
-        }
-      `,
-    },
-  },
 };
 
 // Light theme
@@ -36,6 +27,27 @@ export const light = createTheme({
       secondary: '#000', // Secondary text color (optional)
     },
   },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+        html, body {
+          direction: rtl;
+        }
+      `,
+    },
+    MuiTypography: {
+      styleOverrides: {
+        body2: {
+          backgroundColor: "#666cff22",
+          color: "#516377",
+          fontSize: "125%",
+          fontWeight: 500,
+          padding: ".25rem .5rem",
+          borderRadius: ".25rem",
+        },
+      },
+    },
+  },
 });
 
 // Dark theme
@@ -55,6 +67,27 @@ export const dark = createTheme({
     text: {
       primary: '#d8deea', // Primary text color
       secondary: '#fff', // Secondary text color (optional)
+    },
+  },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+        html, body {
+          direction: rtl;
+        }
+      `,
+    },
+    MuiTypography: {
+      styleOverrides: {
+        body2: {
+          backgroundColor: "#232a3b",
+          color: "white",
+          fontSize: "120%",
+          fontWeight: 500,
+          padding: ".25rem .5rem",
+          borderRadius: ".25rem",
+        },
+      },
     },
   },
 });
