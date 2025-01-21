@@ -70,6 +70,14 @@ export default class Islamic implements iCalendar {
     return HijriMoment(this.date).iYear();
   }
 
+  isValid(): boolean {
+    if (isNaN(Number(this.format("iYYYY"))) || isNaN(Number(this.format("iM"))) || isNaN(Number(this.format("iD")))) {
+      return false;
+      // return "این بازه پشتیبانی نمی شود";
+    }
+    return true;
+  }
+  
   getParts(): string[] {
     return [this.format("iYYYY"), this.format("iMMMM"), this.format("iD")];
   }
