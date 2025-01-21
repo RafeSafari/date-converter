@@ -217,9 +217,15 @@ const ConvertDate = () => {
               <Typography variant="h6">
                 {calendar.title}{calendar.title_alt ? <Typography variant="caption"> ({calendar.title_alt})</Typography>: ''}:
               </Typography>
-              {new calendar.component(selectedDate).getParts().reverse().map((part, i) => (
-                <Typography key={i} variant="h6">{part}</Typography>
-              ))}
+              {new calendar.component(selectedDate).isValid() ?
+                new calendar.component(selectedDate).getParts().reverse().map((part, i) => (
+                  <Typography key={i} variant="h6">{part}</Typography>
+                ))
+              :
+              <Typography variant="h6">
+                <Typography variant="caption" color="warning">غیر قابل محاسبه!</Typography>
+              </Typography>
+              }
             </Box>
           ))}
         </Box>
