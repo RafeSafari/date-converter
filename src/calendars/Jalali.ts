@@ -56,9 +56,9 @@ export default class Jalali implements iCalendar {
     return this.date;
   }
 
-  format(format: string = "jYYYY/jMM/jDD"): string {
+  format(format: string = "jYYYY/jMM/jDD", locale = "fa"): string {
     try {
-      return JalaliMoment(this.date).locale('fa').format(format);
+      return JalaliMoment(this.date).locale(locale).format(format);
     } catch {
       return '-';
     }
@@ -80,6 +80,10 @@ export default class Jalali implements iCalendar {
     return JalaliMoment(this.date).jYear();
   }
 
+  isValid(): boolean {
+    return !isNaN(Number(this.format("jYYYY", "en"))) && !isNaN(Number(this.format("jM", "en"))) && !isNaN(Number(this.format("jD", "en")));
+  }
+  
   getParts(): string[] {
     return this.format("jYYYY jMMMM jD").split(" ");
   }
