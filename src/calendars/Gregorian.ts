@@ -56,6 +56,10 @@ export default class Gregorian implements iCalendar {
     return moment(this.date).year();
   }
 
+  isValid(): boolean {
+    return !isNaN(Number(this.format("YYYY"))) && !isNaN(Number(this.format("M"))) && !isNaN(Number(this.format("D")));
+  }
+  
   getParts(): string[] {
     return this.format("YYYY MMMM D").split(" ");
   }
