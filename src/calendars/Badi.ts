@@ -63,8 +63,8 @@ export default class Badi implements iCalendar {
     return this.date;
   }
 
-  format(format: string = "y m d"): string {
-    return new BadiDate(this.date).format(format, "fa");
+  format(format: string = "y m d", lang = "fa"): string {
+    return new BadiDate(this.date).format(format, lang);
   }
 
   unixDays(): number {
@@ -83,6 +83,10 @@ export default class Badi implements iCalendar {
     return new BadiDate(this.date).year;
   }
 
+  isValid(): boolean {
+    return !isNaN(Number(this.format("y", "en"))) && !isNaN(Number(this.format("m", "en"))) && !isNaN(Number(this.format("d", "en")));
+  }
+  
   getParts(): string[] {
     return this.format("y شهرMM d").split(" ");
   }
