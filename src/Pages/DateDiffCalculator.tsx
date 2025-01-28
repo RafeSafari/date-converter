@@ -81,14 +81,14 @@ const DateDiffCalculator = () => {
     return moment(sourceDate).diff(targetDate, "days");
   }, [targetDate, sourceDate]);
 
-  const sourceDaysInMonth = useMemo(() => sourceCalendar.component.getDayInMonth(sourceMonth, sourceYear), [sourceMonth, sourceYear]);
+  const sourceDaysInMonth = useMemo(() => sourceCalendar.component.getDaysInMonth(sourceMonth, sourceYear), [sourceMonth, sourceYear]);
   useEffect(() => {
     if (sourceDaysInMonth < sourceDay) {
       setSourceDay(sourceDaysInMonth);
     }
   }, [sourceDaysInMonth]);
 
-  const targetDaysInMonth = useMemo(() => targetCalendar.component.getDayInMonth(targetMonth, targetYear), [targetMonth, targetYear]);
+  const targetDaysInMonth = useMemo(() => targetCalendar.component.getDaysInMonth(targetMonth, targetYear), [targetMonth, targetYear]);
   useEffect(() => {
     if (targetDaysInMonth < targetDay) {
       setSourceDay(targetDaysInMonth);

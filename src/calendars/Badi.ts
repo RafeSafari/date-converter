@@ -1,4 +1,4 @@
-import { BadiDate } from "badidate";
+import { BadiDate } from "badidate-fixed";
 import moment from "moment";
 
 export default class Badi implements iCalendar {
@@ -51,7 +51,7 @@ export default class Badi implements iCalendar {
     ];
   }
 
-  static getDayInMonth(month: number, year: number): number {
+  static getDaysInMonth(month: number, year: number): number {
     if (month < 20) {
       return 19;
     } else {

@@ -44,7 +44,7 @@ const ConvertDate = () => {
     setSourceDay(initialDate.day());
   }, [sourceCalendar]);
 
-  const daysInMonth = useMemo(() => sourceCalendar.component.getDayInMonth(sourceMonth, sourceYear), [sourceMonth, sourceYear]);
+  const daysInMonth = useMemo(() => sourceCalendar.component.getDaysInMonth(sourceMonth, sourceYear), [sourceMonth, sourceYear]);
 
   useEffect(() => {
     if (daysInMonth < sourceDay) {

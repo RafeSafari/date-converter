@@ -28,7 +28,7 @@ export default class Gregorian implements iCalendar {
     }));
   }
 
-  static getDayInMonth(month: number, year: number): number {
+  static getDaysInMonth(month: number, year: number): number {
     return moment().year(year).month(month - 1).daysInMonth();
   }
 

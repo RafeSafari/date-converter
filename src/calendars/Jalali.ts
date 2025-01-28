@@ -9,7 +9,7 @@ export default class Jalali implements iCalendar {
     } else if (typeof input === "string") {
       this.date = JalaliMoment(input, "jYYYY/jMM/jDD").toDate();
     } else if (Array.isArray(input)) {
-      this.date = JalaliMoment({ year: input[0], month: input[1], day: input[2] }).toDate();
+      this.date = JalaliMoment(`${input[0]}-${input[1]}-${input[2]}`, "jYYYY-jMM-jDD").toDate();
     } else if (input instanceof Date) {
       this.date = input;
     } else if (typeof input?.year === "number" && typeof input?.month === "number" && typeof input?.day === "number") {
@@ -38,18 +38,8 @@ export default class Jalali implements iCalendar {
     ];
   }
 
-  static getDayInMonth(month: number, year: number): number {
-    if (month < 7) {
-      return 31;
-    } else if (month < 12) {
-      return 30;
-    } else {
-      if (JalaliMoment(`${year}-${month}-28`).jIsLeapYear()) {
-        return 30;
-      } else {
-        return 29;
-      }
-    }
+  static getDaysInMonth(month: number, year: number): number {
+    return JalaliMoment(`${year}-${month}-20`, "jYYYY/jMM/jDD").jDaysInMonth();
   }
 
   valueOf(): Date {

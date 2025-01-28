@@ -38,7 +38,7 @@ export default class Islamic implements iCalendar {
     ];
   }
 
-  static getDayInMonth(month: number, year: number): number {
+  static getDaysInMonth(month: number, year: number): number {
     return HijriMoment(`${year}-${month}-5`, "iYYYY-iMM-iDD").iDaysInMonth();
   }
 
