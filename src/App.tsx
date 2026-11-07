@@ -5,13 +5,16 @@ import { RTLProvider } from './theme/RTLProvider';
 import { light as lightTheme, dark as darkTheme } from './theme/theme';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
-import { DarkMode, LightMode } from "@mui/icons-material";
+import DarkMode from "@mui/icons-material/DarkMode";
+import LightMode from "@mui/icons-material/LightMode";
 import { AppBar, Toolbar, Typography, IconButton, Box } from '@mui/material';
 
 // Routes
 import Error404 from "./pages/404";
+import Test from "./pages/Test";
 import ConvertDate from "./pages/ConvertDate";
 import DateDiffCalculator from "./pages/DateDiffCalculator";
+import ExportRange from "./pages/ExportRange";
 
 function App() {
   // Initialize state based on localStorage
@@ -59,8 +62,10 @@ function App() {
           <BrowserRouter>
             <RouteChangeHandler />
             <Routes>
+              <Route path="/Test" element={<Test />} />
               <Route path="/Conv" element={<ConvertDate />} />
               <Route path="/Diff" element={<DateDiffCalculator />} />
+              <Route path="/Export" element={<ExportRange />} />
               <Route path="/" element={<Navigate to="/Conv" replace />} />
               <Route path="*" element={<Error404 />} />
             </Routes>

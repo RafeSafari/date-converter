@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { FormControl, InputLabel, TextField as MaterialTextField, SxProps } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { FormControl, TextField as MaterialTextField, SxProps } from "@mui/material";
 import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
+import { useWheelStep } from "../hooks/useWheelStep";
 
 const cacheRtl = createCache({
   key: "muirtl",
@@ -22,6 +23,8 @@ interface InputProps {
 const TextField: React.FC<InputProps> = ({ label, type = "text", onChange, value = '', size = 'medium', sx = {} }) => {
 
   const [inputValue, setInputValue] = useState<any>('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const handleChange = (event: any) => {
     let value = event?.target?.value;
     if (type === 'number') {
@@ -38,6 +41,13 @@ const TextField: React.FC<InputProps> = ({ label, type = "text", onChange, value
     }
   };
 
+  useWheelStep(inputRef, (direction) => {
+    const current = Number(inputValue);
+    const next = (Number.isFinite(current) ? current : 0) + direction;
+    setInputValue(next);
+    onChange(next);
+  }, type === 'number');
+
   useEffect(() => {
     setInputValue(value);
   }, [value])
@@ -47,6 +57,7 @@ const TextField: React.FC<InputProps> = ({ label, type = "text", onChange, value
       <FormControl sx={sx}>
         <MaterialTextField
           label={label}
+          inputRef={inputRef}
           onChange={handleChange}
           value={inputValue}
           sx={sx}

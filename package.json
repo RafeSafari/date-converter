@@ -8,16 +8,11 @@
     "@mui/icons-material": "^6.1.10",
     "@mui/material": "^6.1.10",
     "@mui/system": "^6.1.10",
-    "@types/jest": "^29.5.14",
-    "@types/moment-hijri": "^2.1.4",
-    "@types/react": "^19.0.1",
-    "@types/react-dom": "^19.0.1",
-    "@types/suncalc": "^1.9.2",
+    "astronomia": "^4.1.1",
     "badidate-fixed": "^3.1.0",
     "cra-template-typescript": "1.2.0",
     "jalali-moment": "^3.3.11",
     "moment": "^2.30.1",
-    "moment-hijri": "^3.0.0",
     "npm": "^10.9.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -28,7 +23,8 @@
     "stylis": "^4.3.4",
     "stylis-plugin-rtl": "^2.1.1",
     "suncalc": "^1.9.0",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -41,6 +37,13 @@
       "react-app",
       "react-app/jest"
     ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^react-router-dom$": "<rootDir>/node_modules/react-router-dom/dist/index.js",
+      "^react-router/dom$": "<rootDir>/node_modules/react-router/dist/development/dom-export.js",
+      "^astronomia/(.*)$": "<rootDir>/node_modules/astronomia/lib/$1.cjs"
+    }
   },
   "browserslist": {
     "production": [
@@ -55,8 +58,14 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.1.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.10.1",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "@types/suncalc": "^1.9.2",
     "customize-cra": "^1.0.0",
     "react-app-rewired": "^2.2.1",
     "typescript": "^5.7.2"

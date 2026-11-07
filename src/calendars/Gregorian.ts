@@ -1,5 +1,7 @@
 import moment from "moment";
 
+const DAY_MS = 86_400_000;
+
 export default class Gregorian implements iCalendar {
   date: Date;
 
@@ -9,7 +11,7 @@ export default class Gregorian implements iCalendar {
     } else if (typeof input === "string") {
       this.date = moment(input).toDate();
     } else if (Array.isArray(input)) {
-      this.date = moment({ year: input[0], month: input[1], day: input[2] }).toDate();
+      this.date = moment({ year: input[0], month: input[1] - 1, day: input[2] }).toDate();
     } else if (input instanceof Date) {
       this.date = input;
     } else if (typeof input?.year === "number" && typeof input?.month === "number" && typeof input?.day === "number") {
@@ -29,7 +31,10 @@ export default class Gregorian implements iCalendar {
   }
 
   static getDaysInMonth(month: number, year: number): number {
-    return moment().year(year).month(month - 1).daysInMonth();
+    if (!Number.isInteger(month) || month < 1 || month > 12 || !Number.isInteger(year)) {
+      return 0;
+    }
+    return moment({ year, month: month - 1 }).daysInMonth();
   }
 
   valueOf(): Date {
@@ -37,27 +42,30 @@ export default class Gregorian implements iCalendar {
   }
 
   format(format: string = "YYYY/MM/DD"): string {
-    return moment(this.date).format(format);
+    return moment(this.date).locale("en").format(format);
   }
 
   unixDays(): number {
-    return Math.floor(moment(this.date).unix() / 86_400);
+    if (isNaN(this.date.getTime())) {
+      return NaN;
+    }
+    return Math.floor(Date.UTC(this.date.getFullYear(), this.date.getMonth(), this.date.getDate()) / DAY_MS);
   }
 
   day(): number {
-    return moment(this.date).date();
+    return this.date.getDate();
   }
 
   month(): number {
-    return moment(this.date).month() + 1;
+    return this.date.getMonth() + 1;
   }
 
   year(): number {
-    return moment(this.date).year();
+    return this.date.getFullYear();
   }
 
   isValid(): boolean {
-    return !isNaN(Number(this.format("YYYY"))) && !isNaN(Number(this.format("M"))) && !isNaN(Number(this.format("D")));
+    return !isNaN(this.date.getTime());
   }
   
   getParts(): string[] {

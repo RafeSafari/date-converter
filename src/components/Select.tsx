@@ -1,11 +1,11 @@
-import React, { JSX, useEffect, useState } from "react";
+import React, { JSX, useEffect, useRef, useState } from "react";
 import { FormControl, InputLabel, Select as MaterialSelect, MenuItem, SxProps } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import rtlPlugin from "stylis-plugin-rtl";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
 import { isEqualObjects } from "../utils";
+import { useWheelStep } from "../hooks/useWheelStep";
 
 const cacheRtl = createCache({
   key: "muirtl",
@@ -28,6 +28,7 @@ interface SelectProps {
 
 const Select: React.FC<SelectProps> = ({ label, options, onChange, value = '', size = 'medium', sx = {} }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | ''>('');
+  const selectRef = useRef<HTMLDivElement>(null);
 
   const handleChange = (event: any) => {
     const index = Number(event?.target?.value);
@@ -39,13 +40,25 @@ const Select: React.FC<SelectProps> = ({ label, options, onChange, value = '', s
     }
   };
 
+  useWheelStep(selectRef, (direction) => {
+    const currentIndex = options.findIndex(option => isEqualObjects(option.value, value));
+    if (currentIndex === -1) {
+      return;
+    }
+    const nextIndex = Math.min(options.length - 1, Math.max(0, currentIndex + direction));
+    if (nextIndex !== currentIndex) {
+      setSelectedIndex(nextIndex);
+      onChange(options[nextIndex].value);
+    }
+  });
+
   useEffect(() => {
     setSelectedIndex(options.findIndex(option => isEqualObjects(option.value, value)));
   }, [value]);
 
   return (
     <CacheProvider value={cacheRtl}>
-      <FormControl sx={sx}>
+      <FormControl ref={selectRef} sx={sx}>
         <InputLabel size={size === "small" ? "small" : "normal"} id="multiple-select-label">
           {label}
         </InputLabel>

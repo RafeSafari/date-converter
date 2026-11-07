@@ -91,7 +91,7 @@ const DateDiffCalculator = () => {
   const targetDaysInMonth = useMemo(() => targetCalendar.component.getDaysInMonth(targetMonth, targetYear), [targetMonth, targetYear]);
   useEffect(() => {
     if (targetDaysInMonth < targetDay) {
-      setSourceDay(targetDaysInMonth);
+      setTargetDay(targetDaysInMonth);
     }
   }, [targetDaysInMonth]);
 
@@ -420,6 +420,9 @@ const DateDiffCalculator = () => {
             </Typography>
             <Button variant="text" color="primary" component={Link} to="/conv" sx={{ paddingInlineEnd: 1 }}>
               تبدیل تاریخ
+            </Button>
+            <Button variant="text" color="primary" component={Link} to="/Export" sx={{ paddingInlineEnd: 1 }}>
+              خروجی بازه تاریخ
             </Button>
           </Box>
         </Box>

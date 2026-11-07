@@ -1,5 +1,8 @@
 import { BadiDate } from "badidate-fixed";
-import moment from "moment";
+import { parseNumericDate } from "./parse";
+
+const DAY_MS = 86_400_000;
+const BADI_DAY_NUMBER_AT_UNIX_EPOCH = 45943;
 
 export default class Badi implements iCalendar {
   date: Date;
@@ -8,13 +11,14 @@ export default class Badi implements iCalendar {
     if (typeof input === "undefined") {
       this.date = new Date();
     } else if (typeof input === "string") {
-      this.date = Badi.badiDayNumberToStandardDate(new BadiDate(input).valueOf());
+      const parts = parseNumericDate(input);
+      this.date = parts ? Badi.partsToDate(parts[0], parts[1], parts[2]) : new Date(NaN);
     } else if (Array.isArray(input)) {
-      this.date = Badi.badiDayNumberToStandardDate(new BadiDate({ year: input[0], month: input[1], day: input[2] }).valueOf());
+      this.date = Badi.partsToDate(input[0], input[1], input[2]);
     } else if (input instanceof Date) {
       this.date = input;
     } else if (typeof input?.year === "number" && typeof input?.month === "number" && typeof input?.day === "number") {
-      this.date = Badi.badiDayNumberToStandardDate(new BadiDate({ year: input?.year, month: input?.month, day: input?.day }).valueOf());
+      this.date = Badi.partsToDate(input.year, input.month, input.day);
     } else if ('valueOf' in input && typeof input.valueOf === 'function') {
       this.date = new Date(Number(input.valueOf()));
     } else {
@@ -22,8 +26,26 @@ export default class Badi implements iCalendar {
     }
   }
 
+  private static partsToDate(year: number, month: number, day: number): Date {
+    const badiDate = new BadiDate({ year, month, day });
+    if (!badiDate.isValid || badiDate.year !== year || badiDate.month !== month || badiDate.day !== day) {
+      return new Date(NaN);
+    }
+    return Badi.badiDayNumberToStandardDate(badiDate.valueOf());
+  }
+
   static badiDayNumberToStandardDate(badiDayNumber: number): Date {
-    return moment((badiDayNumber - 45943) * 86_400_000).toDate();
+    if (!Number.isFinite(badiDayNumber)) {
+      return new Date(NaN);
+    }
+    const utcDate = new Date((badiDayNumber - BADI_DAY_NUMBER_AT_UNIX_EPOCH) * DAY_MS);
+    const year = utcDate.getUTCFullYear();
+    const month = utcDate.getUTCMonth();
+    const day = utcDate.getUTCDate();
+    if (isNaN(year)) {
+      return new Date(NaN);
+    }
+    return new Date(year, month, day);
   }
 
   static getMonths(): {name: string, value: number}[] {
@@ -52,11 +74,14 @@ export default class Badi implements iCalendar {
   }
 
   static getDaysInMonth(month: number, year: number): number {
-    if (month < 20) {
-      return 19;
-    } else {
-      return new BadiDate({year, month: 20, day: 2}).ayyamiHaLength;
+    if (!Number.isInteger(year) || !Number.isInteger(month) || month < 1 || month > 20) {
+      return 0;
     }
+    const badiDate = new BadiDate({ year, month: 20, day: 1 });
+    if (!badiDate.isValid) {
+      return 0;
+    }
+    return month === 20 ? badiDate.ayyamiHaLength : 19;
   }
 
   valueOf(): Date {
@@ -64,11 +89,15 @@ export default class Badi implements iCalendar {
   }
 
   format(format: string = "y m d", lang = "fa"): string {
-    return new BadiDate(this.date).format(format, lang);
+    const badiDate = new BadiDate(this.date);
+    return badiDate.isValid ? badiDate.format(format, lang) : "-";
   }
 
   unixDays(): number {
-    return Math.floor(moment(this.date).unix() / 86_400);
+    if (isNaN(this.date.getTime())) {
+      return NaN;
+    }
+    return Math.floor(Date.UTC(this.date.getFullYear(), this.date.getMonth(), this.date.getDate()) / DAY_MS);
   }
 
   day(): number {
@@ -84,10 +113,15 @@ export default class Badi implements iCalendar {
   }
 
   isValid(): boolean {
-    return !isNaN(Number(this.format("y", "en"))) && !isNaN(Number(this.format("m", "en"))) && !isNaN(Number(this.format("d", "en")));
+    return new BadiDate(this.date).isValid;
   }
   
   getParts(): string[] {
-    return this.format("y شهرMM d").split(" ");
+    const badiDate = new BadiDate(this.date);
+    if (!badiDate.isValid) {
+      return ["-", "-", "-"];
+    }
+    const monthName = Badi.getMonths().find((month) => month.value === badiDate.month)?.name ?? "";
+    return [String(badiDate.year), monthName, String(badiDate.day)];
   }
 }
