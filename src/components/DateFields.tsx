@@ -55,6 +55,7 @@ const DateFields = ({ label, value }: DateFieldsProps) => {
             value={day}
             onChange={(next) => { setDay(next); }}
             onStepBeyond={wheelHandlers.onDayBoundary}
+            reverseWheel
             sx={{ width: "100%" }}
           />
         </Box>
@@ -71,6 +72,7 @@ const DateFields = ({ label, value }: DateFieldsProps) => {
             value={month}
             onChange={(next) => { setMonth(next); }}
             onStepBeyond={wheelHandlers.onMonthBoundary}
+            reverseWheel
             sx={{ width: "100%" }}
           />
         </Box>
@@ -81,6 +83,7 @@ const DateFields = ({ label, value }: DateFieldsProps) => {
             type="number"
             value={year}
             onChange={(next) => { setYear(Number(next)); }}
+            reverseWheel
             sx={{ width: "100%" }}
           />
         </Box>

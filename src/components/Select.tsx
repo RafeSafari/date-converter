@@ -25,9 +25,10 @@ interface SelectProps {
   value?: any;
   sx?: SxProps;
   size?: "small" | "medium";
+  reverseWheel?: boolean;
 }
 
-const Select: React.FC<SelectProps> = ({ label, options, onChange, onStepBeyond, value = '', size = 'medium', sx = {} }) => {
+const Select: React.FC<SelectProps> = ({ label, options, onChange, onStepBeyond, value = '', size = 'medium', sx = {}, reverseWheel = false }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | ''>('');
   const selectRef = useRef<HTMLDivElement>(null);
 
@@ -42,13 +43,14 @@ const Select: React.FC<SelectProps> = ({ label, options, onChange, onStepBeyond,
   };
 
   useWheelStep(selectRef, (direction) => {
+    const step: 1 | -1 = reverseWheel ? (direction === 1 ? -1 : 1) : direction;
     const currentIndex = options.findIndex(option => isEqualObjects(option.value, value));
     if (currentIndex === -1) {
       return;
     }
-    const nextIndex = currentIndex + direction;
+    const nextIndex = currentIndex + step;
     if (nextIndex < 0 || nextIndex >= options.length) {
-      onStepBeyond?.(direction);
+      onStepBeyond?.(step);
       return;
     }
     setSelectedIndex(nextIndex);

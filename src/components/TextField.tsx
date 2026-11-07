@@ -18,9 +18,10 @@ interface InputProps {
   value?: any;
   sx?: SxProps;
   size?: "small" | "medium";
+  reverseWheel?: boolean;
 }
 
-const TextField: React.FC<InputProps> = ({ label, type = "text", onChange, value = '', size = 'medium', sx = {} }) => {
+const TextField: React.FC<InputProps> = ({ label, type = "text", onChange, value = '', size = 'medium', sx = {}, reverseWheel = false }) => {
 
   const [inputValue, setInputValue] = useState<any>('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,8 +43,9 @@ const TextField: React.FC<InputProps> = ({ label, type = "text", onChange, value
   };
 
   useWheelStep(inputRef, (direction) => {
+    const step: 1 | -1 = reverseWheel ? (direction === 1 ? -1 : 1) : direction;
     const current = Number(inputValue);
-    const next = (Number.isFinite(current) ? current : 0) + direction;
+    const next = (Number.isFinite(current) ? current : 0) + step;
     setInputValue(next);
     onChange(next);
   }, type === 'number');

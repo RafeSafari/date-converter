@@ -61,12 +61,36 @@ describe("DateFields", () => {
     expect(year.value).toBe("2025");
   });
 
-  it("steps the day with the wheel", () => {
+  it("steps the day backwards when scrolling down", () => {
     const { day } = setup();
 
     wheel(formControlOf(day), 100);
 
+    expect(day).toHaveTextContent("15");
+  });
+
+  it("steps the day forwards when scrolling up", () => {
+    const { day } = setup();
+
+    wheel(formControlOf(day), -100);
+
     expect(day).toHaveTextContent("17");
+  });
+
+  it("steps the month backwards when scrolling down", () => {
+    const { month } = setup();
+
+    wheel(formControlOf(month), 100);
+
+    expect(month).toHaveTextContent("مهر");
+  });
+
+  it("steps the year backwards when scrolling down", () => {
+    const { year } = setup();
+
+    wheel(year, 100);
+
+    expect(year.value).toBe("1403");
   });
 
   it("switches calendars while keeping the same date", () => {
@@ -80,11 +104,22 @@ describe("DateFields", () => {
     expect(year.value).toBe("2025");
   });
 
-  it("moves to the next month when stepping past the last day", () => {
+  it("moves to the previous month when scrolling down past the first day", () => {
+    const { day, month } = setup();
+
+    for (let index = 0; index < 16; index += 1) {
+      wheel(formControlOf(day), 100);
+    }
+
+    expect(month).toHaveTextContent("مهر");
+    expect(day).toHaveTextContent("30");
+  });
+
+  it("moves to the next month when scrolling up past the last day", () => {
     const { day, month } = setup();
 
     for (let index = 0; index < 15; index += 1) {
-      wheel(formControlOf(day), 100);
+      wheel(formControlOf(day), -100);
     }
 
     expect(month).toHaveTextContent("ذر");
