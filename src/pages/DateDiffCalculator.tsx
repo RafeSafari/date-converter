@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Typography, Button, Grid2 as Grid } from "@mui/material";
+import { Box, Typography, Button, Grid2 as Grid, useMediaQuery } from "@mui/material";
 import Select from "components/Select";
 import TextField from "components/TextField";
 import toast from "react-hot-toast";
@@ -10,6 +10,8 @@ import { thousandSep } from "utils";
 import { createDateWheelHandlers } from "utils/dateSteps";
 
 const DateDiffCalculator = () => {
+  const stackInputs = useMediaQuery("(max-width: 319.98px)");
+
   const [sourceCalendar, setSourceCalendar] = useState(CALENDARS[0]);
   const [sourceDay, setSourceDay] = useState(1);
   const [sourceMonth, setSourceMonth] = useState(1);
@@ -163,7 +165,7 @@ const DateDiffCalculator = () => {
             onChange={(value) => {
               setSourceCalendar(value);
             }}
-            sx={{ width: 180 }}
+            sx={{ width: { xs: "100%", sm: 180 } }}
           />
 
           <Box
@@ -178,7 +180,7 @@ const DateDiffCalculator = () => {
             }}
           >
             <Grid container spacing={1} sx={{ width: { xs: "100%", sm: "auto" } }}>
-              <Grid size={3} minWidth={70}>
+              <Grid size={stackInputs ? 12 : 3} minWidth={stackInputs ? 0 : 70}>
                 <Select
                   label="روز"
                   options={Array.from({ length: sourceDaysInMonth }, (_, index) => ({
@@ -194,7 +196,7 @@ const DateDiffCalculator = () => {
                 />
               </Grid>
 
-              <Grid size="grow" minWidth={100}>
+              <Grid size={stackInputs ? 12 : "grow"} minWidth={stackInputs ? 0 : 100}>
                 <Select
                   label="ماه"
                   options={sourceCalendar.component.getMonths().map((month) => ({
@@ -210,7 +212,7 @@ const DateDiffCalculator = () => {
                 />
               </Grid>
 
-              <Grid size={3} minWidth={70}>
+              <Grid size={stackInputs ? 12 : 3} minWidth={stackInputs ? 0 : 70}>
                 <TextField
                   label="سال"
                   type="number"
@@ -251,7 +253,7 @@ const DateDiffCalculator = () => {
             onChange={(value) => {
               setTargetCalendar(value);
             }}
-            sx={{ width: 180 }}
+            sx={{ width: { xs: "100%", sm: 180 } }}
           />
 
           <Box
@@ -266,7 +268,7 @@ const DateDiffCalculator = () => {
             }}
           >
             <Grid container spacing={1} sx={{ width: { xs: "100%", sm: "auto" } }}>
-              <Grid size={3} minWidth={70}>
+              <Grid size={stackInputs ? 12 : 3} minWidth={stackInputs ? 0 : 70}>
                 <Select
                   label="روز"
                   options={Array.from({ length: targetDaysInMonth }, (_, index) => ({
@@ -282,7 +284,7 @@ const DateDiffCalculator = () => {
                 />
               </Grid>
 
-              <Grid size="grow" minWidth={100}>
+              <Grid size={stackInputs ? 12 : "grow"} minWidth={stackInputs ? 0 : 100}>
                 <Select
                   label="ماه"
                   options={targetCalendar.component.getMonths().map((month) => ({
@@ -298,7 +300,7 @@ const DateDiffCalculator = () => {
                 />
               </Grid>
 
-              <Grid size={3} minWidth={70}>
+              <Grid size={stackInputs ? 12 : 3} minWidth={stackInputs ? 0 : 70}>
                 <TextField
                   label="سال"
                   type="number"
@@ -338,6 +340,7 @@ const DateDiffCalculator = () => {
         {/* Results */}
         <Box
           sx={{
+            width: "100%",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -345,53 +348,56 @@ const DateDiffCalculator = () => {
             gap: 2,
           }}
         >
-          <Box key={sourceCalendar.name} sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: ".35rem" }}>
-            {/* <Typography variant="h6">
-              {sourceCalendar.title}
-              {sourceCalendar.title_alt ? <Typography variant="caption"> ({sourceCalendar.title_alt})</Typography> : ""}:
-            </Typography> */}
-            {!new sourceCalendar.component(sourceDate).isValid() || !new sourceCalendar.component(sourceDate).isValid() ? (
+          <Box
+            key={sourceCalendar.name}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              alignItems: "center",
+              justifyContent: "center",
+              columnGap: ".35rem",
+              rowGap: ".25rem",
+              width: "100%",
+            }}
+          >
+            {!new sourceCalendar.component(sourceDate).isValid() || !new targetCalendar.component(targetDate).isValid() ? (
               <Typography variant="h6">
                 <Typography variant="caption" color="warning">
                   غیر قابل محاسبه!
                 </Typography>
               </Typography>
-            ) : <>
-              {(
-                new sourceCalendar.component(sourceDate)
-                .getParts()
-                .reverse()
-                .map((part, i) => (
-                  <Typography key={i}>
-                    {part}
-                  </Typography>
-                ))
-              )}
-              <Typography variant="caption">(مبدأ)</Typography>
-              {diffDays === 0 ?
-                <>
-                  <Typography variant="body2">برابر</Typography>
-                  <Typography>با</Typography>
-                </>
-                :
-                <>
-                  <Typography variant="body2">{`${thousandSep(Math.abs(diffDays))} روز ${diffDays < 0 ? "قبل" : "بعد"}`}</Typography>
-                  <Typography>از</Typography>
-                </>
-              }
-              {(
-                new targetCalendar.component(targetDate)
-                .getParts()
-                .reverse()
-                .map((part, i) => (
-                  <Typography key={i}>
-                    {part}
-                  </Typography>
-                ))
-              )}
-              <Typography variant="caption">(مقصد)</Typography>
-              <Typography>است</Typography>
-            </>}
+            ) : (
+              <>
+                <Box sx={{ display: "inline-flex", alignItems: "baseline", gap: ".25rem", whiteSpace: "nowrap" }}>
+                  {new sourceCalendar.component(sourceDate)
+                    .getParts()
+                    .reverse()
+                    .map((part, i) => (
+                      <Typography key={i}>{part}</Typography>
+                    ))}
+                  <Typography variant="caption" color="text.secondary">(مبدأ)</Typography>
+                </Box>
+
+                <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
+                  {diffDays === 0
+                    ? "برابر با"
+                    : `${thousandSep(Math.abs(diffDays))} روز ${diffDays < 0 ? "قبل" : "بعد"} از`}
+                </Typography>
+
+                <Box sx={{ display: "inline-flex", alignItems: "baseline", gap: ".25rem", whiteSpace: "nowrap" }}>
+                  {new targetCalendar.component(targetDate)
+                    .getParts()
+                    .reverse()
+                    .map((part, i) => (
+                      <Typography key={i}>{part}</Typography>
+                    ))}
+                  <Typography variant="caption" color="text.secondary">(مقصد)</Typography>
+                </Box>
+
+                <Typography variant="body2">است</Typography>
+              </>
+            )}
           </Box>
         </Box>
       </Box>

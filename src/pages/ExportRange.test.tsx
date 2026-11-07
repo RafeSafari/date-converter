@@ -29,7 +29,7 @@ describe("ExportRange", () => {
     renderPage();
 
     expect(screen.getByText("31 روز")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "دریافت فایل" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "دریافت اکسل" })).toBeEnabled();
   });
 
   it("blocks ranges longer than the maximum", () => {
@@ -39,7 +39,7 @@ describe("ExportRange", () => {
     fireEvent.change(endYear, { target: { value: String(Number(startYear.value) + 3) } });
 
     expect(screen.getByText("حداکثر بازه خروجی 1,000 روز است")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "دریافت فایل" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "دریافت اکسل" })).toBeDisabled();
   });
 
   it("blocks ranges that end before they start", () => {
@@ -49,7 +49,7 @@ describe("ExportRange", () => {
     fireEvent.change(endYear, { target: { value: String(Number(startYear.value) - 1) } });
 
     expect(screen.getByText("تاریخ پایان باید بعد از تاریخ شروع باشد")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "دریافت فایل" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "دریافت اکسل" })).toBeDisabled();
   });
 
   it("blocks invalid dates", () => {
@@ -59,7 +59,7 @@ describe("ExportRange", () => {
     fireEvent.change(startYear, { target: { value: "1404.5" } });
 
     expect(screen.getByText("تاریخ شروع و پایان باید معتبر باشند")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "دریافت فایل" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "دریافت اکسل" })).toBeDisabled();
   });
 
   it("downloads the range as CSV", async () => {
@@ -71,9 +71,8 @@ describe("ExportRange", () => {
     try {
       renderPage();
 
-      fireEvent.mouseDown(screen.getAllByRole("combobox")[6]);
-      fireEvent.click(await screen.findByRole("option", { name: "CSV" }));
-      fireEvent.click(screen.getByRole("button", { name: "دریافت فایل" }));
+      fireEvent.click(screen.getByRole("button", { name: "انتخاب قالب خروجی" }));
+      fireEvent.click(await screen.findByRole("menuitem", { name: "CSV" }));
 
       await waitFor(() => expect(createObjectURL).toHaveBeenCalledTimes(1));
 
@@ -83,6 +82,7 @@ describe("ExportRange", () => {
       expect(anchorClick).toHaveBeenCalled();
 
       await waitFor(() => expect(revokeObjectURL).toHaveBeenCalledTimes(1), { timeout: 3000 });
+      expect(screen.getByRole("button", { name: "دریافت CSV" })).toBeEnabled();
     } finally {
       anchorClick.mockRestore();
       delete (URL as { createObjectURL?: unknown }).createObjectURL;

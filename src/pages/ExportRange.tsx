@@ -1,6 +1,15 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
 import { Link } from "react-router-dom";
-import { Box, Typography, Button, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  ButtonGroup,
+  Menu,
+  MenuItem,
+  useMediaQuery,
+} from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Select from "components/Select";
 import TextField from "components/TextField";
 import toast from "react-hot-toast";
@@ -28,10 +37,12 @@ const CALENDAR_OPTIONS = CALENDARS.map(calendar => ({
   value: calendar,
 }));
 
-const FORMAT_OPTIONS = [
-  { title: "اکسل (xlsx)", value: "xlsx" },
-  { title: "CSV", value: "csv" },
-];
+type ExportFormat = "xlsx" | "csv";
+
+const FORMAT_LABELS: Record<ExportFormat, string> = {
+  xlsx: "اکسل",
+  csv: "CSV",
+};
 
 const downloadBlob = (blob: Blob, fileName: string) => {
   const url = URL.createObjectURL(blob);
@@ -139,8 +150,9 @@ const ExportRange = () => {
   const start = useCalendarDate(new Date());
   const end = useCalendarDate(new Date(Date.now() + 30 * 86_400_000));
 
-  const [format, setFormat] = useState<"xlsx" | "csv">("xlsx");
+  const [format, setFormat] = useState<ExportFormat>("xlsx");
   const [isExporting, setIsExporting] = useState(false);
+  const [formatMenuAnchor, setFormatMenuAnchor] = useState<HTMLElement | null>(null);
 
   const dayCount = useMemo(
     () => countDaysInclusive(start.date, end.date),
@@ -160,7 +172,7 @@ const ExportRange = () => {
     return "";
   }, [dayCount]);
 
-  const exportRange = async () => {
+  const exportRange = async (selectedFormat: ExportFormat = format) => {
     if (rangeError) {
       toast.error(rangeError);
       return;
@@ -174,7 +186,7 @@ const ExportRange = () => {
       const { headers, rows } = buildExportTable(start.date, end.date);
       const fileName = `dates-${formatIsoDate(start.date)}-to-${formatIsoDate(end.date)}`;
 
-      if (format === "csv") {
+      if (selectedFormat === "csv") {
         const blob = new Blob([toCsv(headers, rows)], { type: "text/csv;charset=utf-8" });
         downloadBlob(blob, `${fileName}.csv`);
       } else {
@@ -197,6 +209,16 @@ const ExportRange = () => {
     } finally {
       setIsExporting(false);
     }
+  };
+
+  const openFormatMenu = (event: MouseEvent<HTMLElement>) => {
+    setFormatMenuAnchor(event.currentTarget);
+  };
+
+  const exportWithFormat = (selectedFormat: ExportFormat) => {
+    setFormatMenuAnchor(null);
+    setFormat(selectedFormat);
+    void exportRange(selectedFormat);
   };
 
   return (
@@ -229,22 +251,42 @@ const ExportRange = () => {
           justifyContent: "center",
           gap: 2,
         }}>
-          <Select
-            label="قالب فایل"
-            options={FORMAT_OPTIONS}
-            value={format}
-            onChange={(next) => { setFormat(next); }}
-            sx={{ width: 180 }}
-          />
-          <Button
+          <ButtonGroup
             variant="contained"
             color="primary"
-            onClick={exportRange}
             disabled={!!rangeError || isExporting}
-            sx={{ minWidth: 180, whiteSpace: "nowrap" }}
+            aria-label="خروجی بازه تاریخ"
           >
-            {isExporting ? "در حال آماده‌سازی..." : "دریافت فایل"}
-          </Button>
+            <Button
+              onClick={() => { void exportRange(); }}
+              sx={{ minWidth: 180, whiteSpace: "nowrap" }}
+            >
+              {isExporting ? "در حال آماده‌سازی..." : `دریافت ${FORMAT_LABELS[format]}`}
+            </Button>
+            <Button
+              size="small"
+              aria-label="انتخاب قالب خروجی"
+              aria-controls={formatMenuAnchor ? "export-format-menu" : undefined}
+              aria-expanded={formatMenuAnchor ? "true" : undefined}
+              aria-haspopup="menu"
+              onClick={openFormatMenu}
+            >
+              <ArrowDropDownIcon />
+            </Button>
+          </ButtonGroup>
+          <Menu
+            id="export-format-menu"
+            anchorEl={formatMenuAnchor}
+            open={Boolean(formatMenuAnchor)}
+            onClose={() => { setFormatMenuAnchor(null); }}
+          >
+            <MenuItem selected={format === "xlsx"} onClick={() => { exportWithFormat("xlsx"); }}>
+              اکسل (xlsx)
+            </MenuItem>
+            <MenuItem selected={format === "csv"} onClick={() => { exportWithFormat("csv"); }}>
+              CSV
+            </MenuItem>
+          </Menu>
         </Box>
       </Box>
 

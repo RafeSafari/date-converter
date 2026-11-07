@@ -27,7 +27,7 @@ test("renders the export range page at /Export", () => {
   window.history.pushState({}, "", "/Export");
   render(<App />);
 
-  expect(screen.getByRole("button", { name: "دریافت فایل" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "دریافت اکسل" })).toBeInTheDocument();
 
   window.history.pushState({}, "", "/");
 });
