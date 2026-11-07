@@ -13,7 +13,7 @@ const wheel = (element: Element, deltaY: number) =>
     element.dispatchEvent(new WheelEvent("wheel", { deltaY, bubbles: true, cancelable: true }));
   });
 
-const setup = (initial: string) => {
+const setup = (initial: string, onStepBeyond?: (direction: 1 | -1) => void) => {
   const onChange = jest.fn();
   const Harness = () => {
     const [value, setValue] = useState(initial);
@@ -26,6 +26,7 @@ const setup = (initial: string) => {
           onChange(next);
           setValue(next);
         }}
+        onStepBeyond={onStepBeyond}
       />
     );
   };
@@ -66,5 +67,34 @@ describe("Select wheel navigation", () => {
 
     wheel(control, 0);
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("reports downward steps past the last option", () => {
+    const onStepBeyond = jest.fn();
+    const { onChange, control } = setup("c", onStepBeyond);
+
+    wheel(control, 100);
+
+    expect(onStepBeyond).toHaveBeenCalledWith(1);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it("reports upward steps past the first option", () => {
+    const onStepBeyond = jest.fn();
+    const { control } = setup("a", onStepBeyond);
+
+    wheel(control, -100);
+
+    expect(onStepBeyond).toHaveBeenCalledWith(-1);
+  });
+
+  it("does not report in-range steps as boundary steps", () => {
+    const onStepBeyond = jest.fn();
+    const { onChange, control } = setup("b", onStepBeyond);
+
+    wheel(control, 100);
+
+    expect(onChange).toHaveBeenLastCalledWith("c");
+    expect(onStepBeyond).not.toHaveBeenCalled();
   });
 });

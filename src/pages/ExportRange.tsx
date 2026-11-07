@@ -14,6 +14,7 @@ import {
   toCsv,
 } from "utils/exportTable";
 import { thousandSep } from "utils";
+import { createDateWheelHandlers } from "utils/dateSteps";
 
 type CalendarDate = ReturnType<typeof useCalendarDate>;
 
@@ -54,6 +55,12 @@ const DateFields = ({
 }) => {
   const { calendar, changeCalendar, day, setDay, month, setMonth, year, setYear, daysInMonth } = value;
 
+  const wheelHandlers = createDateWheelHandlers(
+    calendar,
+    { year, month, day },
+    { setYear, setMonth, setDay },
+  );
+
   return (
     <Box sx={{ width: "100%", display: "flex", flexWrap: "wrap", gap: 1, alignItems: "center" }}>
       <Box sx={{ flex: { xs: "1 1 100%", sm: "0 0 180px" } }}>
@@ -78,6 +85,7 @@ const DateFields = ({
             }
             value={day}
             onChange={(next) => { setDay(next); }}
+            onStepBeyond={wheelHandlers.onDayBoundary}
             sx={{ width: "100%" }}
           />
         </Box>
@@ -93,6 +101,7 @@ const DateFields = ({
             }
             value={month}
             onChange={(next) => { setMonth(next); }}
+            onStepBeyond={wheelHandlers.onMonthBoundary}
             sx={{ width: "100%" }}
           />
         </Box>

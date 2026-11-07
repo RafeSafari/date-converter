@@ -4,6 +4,7 @@ import { Box, Typography, Button, useMediaQuery } from '@mui/material';
 import Select from "components/Select";
 import TextField from "components/TextField";
 import CALENDARS from "calendars";
+import { createDateWheelHandlers } from "utils/dateSteps";
 
 const ConvertDate = () => {
 
@@ -45,6 +46,12 @@ const ConvertDate = () => {
       setSourceDay(daysInMonth);
     }
   }, [daysInMonth, sourceDay]);
+
+  const wheelHandlers = createDateWheelHandlers(
+    sourceCalendar,
+    { year: sourceYear, month: sourceMonth, day: sourceDay },
+    { setYear: setSourceYear, setMonth: setSourceMonth, setDay: setSourceDay },
+  );
 
   return (
     <Box
@@ -111,6 +118,7 @@ const ConvertDate = () => {
                 }
                 value={sourceDay}
                 onChange={(value) => {setSourceDay(value)}}
+                onStepBeyond={wheelHandlers.onDayBoundary}
                 sx={{ width: "100%" }}
               />
             </Box>
@@ -126,6 +134,7 @@ const ConvertDate = () => {
                 }
                 value={sourceMonth}
                 onChange={(value) => {setSourceMonth(value)}}
+                onStepBeyond={wheelHandlers.onMonthBoundary}
                 sx={{ width: "100%" }}
               />
             </Box>

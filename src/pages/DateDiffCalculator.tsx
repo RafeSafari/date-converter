@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import CALENDARS from "calendars";
 import moment from "moment";
 import { thousandSep } from "utils";
+import { createDateWheelHandlers } from "utils/dateSteps";
 
 const DateDiffCalculator = () => {
   const [sourceCalendar, setSourceCalendar] = useState(CALENDARS[0]);
@@ -95,6 +96,18 @@ const DateDiffCalculator = () => {
     }
   }, [targetDaysInMonth]);
 
+  const sourceWheelHandlers = createDateWheelHandlers(
+    sourceCalendar,
+    { year: sourceYear, month: sourceMonth, day: sourceDay },
+    { setYear: setSourceYear, setMonth: setSourceMonth, setDay: setSourceDay },
+  );
+
+  const targetWheelHandlers = createDateWheelHandlers(
+    targetCalendar,
+    { year: targetYear, month: targetMonth, day: targetDay },
+    { setYear: setTargetYear, setMonth: setTargetMonth, setDay: setTargetDay },
+  );
+
   return (
     <Box
       sx={{
@@ -176,6 +189,7 @@ const DateDiffCalculator = () => {
                   onChange={(value) => {
                     setSourceDay(value);
                   }}
+                  onStepBeyond={sourceWheelHandlers.onDayBoundary}
                   sx={{ width: "100%" }}
                 />
               </Grid>
@@ -191,6 +205,7 @@ const DateDiffCalculator = () => {
                   onChange={(value) => {
                     setSourceMonth(value);
                   }}
+                  onStepBeyond={sourceWheelHandlers.onMonthBoundary}
                   sx={{ width: "100%" }}
                 />
               </Grid>
@@ -262,6 +277,7 @@ const DateDiffCalculator = () => {
                   onChange={(value) => {
                     setTargetDay(value);
                   }}
+                  onStepBeyond={targetWheelHandlers.onDayBoundary}
                   sx={{ width: "100%" }}
                 />
               </Grid>
@@ -277,6 +293,7 @@ const DateDiffCalculator = () => {
                   onChange={(value) => {
                     setTargetMonth(value);
                   }}
+                  onStepBeyond={targetWheelHandlers.onMonthBoundary}
                   sx={{ width: "100%" }}
                 />
               </Grid>

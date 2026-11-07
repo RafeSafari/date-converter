@@ -21,12 +21,13 @@ interface SelectProps {
   label: string;
   options: Option[];
   onChange: (value: any) => void;
+  onStepBeyond?: (direction: 1 | -1) => void;
   value?: any;
   sx?: SxProps;
   size?: "small" | "medium";
 }
 
-const Select: React.FC<SelectProps> = ({ label, options, onChange, value = '', size = 'medium', sx = {} }) => {
+const Select: React.FC<SelectProps> = ({ label, options, onChange, onStepBeyond, value = '', size = 'medium', sx = {} }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | ''>('');
   const selectRef = useRef<HTMLDivElement>(null);
 
@@ -45,11 +46,13 @@ const Select: React.FC<SelectProps> = ({ label, options, onChange, value = '', s
     if (currentIndex === -1) {
       return;
     }
-    const nextIndex = Math.min(options.length - 1, Math.max(0, currentIndex + direction));
-    if (nextIndex !== currentIndex) {
-      setSelectedIndex(nextIndex);
-      onChange(options[nextIndex].value);
+    const nextIndex = currentIndex + direction;
+    if (nextIndex < 0 || nextIndex >= options.length) {
+      onStepBeyond?.(direction);
+      return;
     }
+    setSelectedIndex(nextIndex);
+    onChange(options[nextIndex].value);
   });
 
   useEffect(() => {
