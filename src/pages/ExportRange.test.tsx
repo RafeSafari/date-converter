@@ -25,11 +25,10 @@ const renderPage = () =>
 const yearInputs = () => screen.getAllByRole("spinbutton") as HTMLInputElement[];
 
 describe("ExportRange", () => {
-  it("shows the inclusive range length and enables export", () => {
+  it("shows the inclusive range length in the export button", () => {
     renderPage();
 
-    expect(screen.getByText("31 روز")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "دریافت اکسل" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "دریافت اکسل برای 31 روز" })).toBeEnabled();
   });
 
   it("blocks ranges longer than the maximum", () => {
@@ -82,7 +81,7 @@ describe("ExportRange", () => {
       expect(anchorClick).toHaveBeenCalled();
 
       await waitFor(() => expect(revokeObjectURL).toHaveBeenCalledTimes(1), { timeout: 3000 });
-      expect(screen.getByRole("button", { name: "دریافت CSV" })).toBeEnabled();
+      expect(screen.getByRole("button", { name: /^دریافت CSV برای 31 روز$/ })).toBeEnabled();
     } finally {
       anchorClick.mockRestore();
       delete (URL as { createObjectURL?: unknown }).createObjectURL;

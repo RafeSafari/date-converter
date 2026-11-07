@@ -80,6 +80,10 @@ const ExportRange = () => {
     return "";
   }, [dayCount]);
 
+  const exportLabel = rangeError
+    ? `دریافت ${FORMAT_LABELS[format]}`
+    : `دریافت ${FORMAT_LABELS[format]} برای ${thousandSep(dayCount)} روز`;
+
   const exportRange = async (selectedFormat: ExportFormat = format) => {
     if (rangeError) {
       toast.error(rangeError);
@@ -147,9 +151,11 @@ const ExportRange = () => {
         <DateFields label="تاریخ شروع" value={start} />
         <DateFields label="تاریخ پایان" value={end} />
 
-        <Typography variant="body1" color={rangeError ? "error" : "text.secondary"}>
-          {rangeError || `${thousandSep(dayCount)} روز`}
-        </Typography>
+        {rangeError ? (
+          <Typography variant="body1" color="error">
+            {rangeError}
+          </Typography>
+        ) : null}
 
         <Box sx={{
           width: "100%",
@@ -169,7 +175,7 @@ const ExportRange = () => {
               onClick={() => { void exportRange(); }}
               sx={{ minWidth: 180, whiteSpace: "nowrap" }}
             >
-              {isExporting ? "در حال آماده‌سازی..." : `دریافت ${FORMAT_LABELS[format]}`}
+              {isExporting ? "در حال آماده‌سازی..." : exportLabel}
             </Button>
             <Button
               size="small"
