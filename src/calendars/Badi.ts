@@ -37,7 +37,7 @@ export default class Badi implements iCalendar {
     return new Date(gregorian.year, gregorian.month - 1, gregorian.day);
   }
 
-  static getMonths(): {name: string, value: number}[] {
+  static getMonths(_year?: number): {name: string, value: number}[] {
     return [
       { value: 1, name: "شهرالبهاء", },
       { value: 2, name: "شهرالجلال", },

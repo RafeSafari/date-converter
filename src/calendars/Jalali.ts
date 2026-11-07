@@ -42,7 +42,7 @@ export default class Jalali implements iCalendar {
     }
   }
 
-  static getMonths(): {name: string, value: number}[] {
+  static getMonths(_year?: number): {name: string, value: number}[] {
     return [
       { value: 1,  name: "فروردین" },
       { value: 2,  name: "اردیبهشت" },

@@ -16,6 +16,7 @@ const calendar = (name: string) => {
 const jalali = calendar("Jalali");
 const badi = calendar("Badi");
 const islamic = calendar("Islamic");
+const chinese = calendar("Chinese");
 
 describe("stepDayBoundary", () => {
   it("moves from the last day of a month to the first day of the next", () => {
@@ -73,6 +74,24 @@ describe("stepDayBoundary", () => {
   it("returns null for an unknown month", () => {
     expect(stepDayBoundary(jalali, { year: 1404, month: 13, day: 1 }, 1)).toBeNull();
   });
+
+  it("follows the Chinese month order around a leap month", () => {
+    expect(stepDayBoundary(chinese, { year: 2025, month: 6, day: 30 }, 1)).toEqual({
+      year: 2025,
+      month: 18,
+      day: 1,
+    });
+    expect(stepDayBoundary(chinese, { year: 2025, month: 18, day: 29 }, 1)).toEqual({
+      year: 2025,
+      month: 7,
+      day: 1,
+    });
+    expect(stepDayBoundary(chinese, { year: 2025, month: 7, day: 1 }, -1)).toEqual({
+      year: 2025,
+      month: 18,
+      day: 29,
+    });
+  });
 });
 
 describe("stepMonthBoundary", () => {
@@ -89,6 +108,15 @@ describe("stepMonthBoundary", () => {
 
   it("returns null for an unknown month", () => {
     expect(stepMonthBoundary(jalali, { year: 1404, month: 13 }, 1)).toBeNull();
+  });
+
+  it("steps over the leap month and into the next year's month list", () => {
+    expect(stepMonthBoundary(chinese, { year: 2025, month: 18 }, 1)).toEqual({ year: 2025, month: 7 });
+    expect(stepMonthBoundary(chinese, { year: 2025, month: 18 }, -1)).toEqual({ year: 2025, month: 6 });
+    expect(stepMonthBoundary(chinese, { year: 2025, month: 12 }, 1)).toEqual({ year: 2026, month: 1 });
+
+    // The target year's month list decides what the boundary month is.
+    expect(stepMonthBoundary(chinese, { year: 2026, month: 1 }, -1)).toEqual({ year: 2025, month: 12 });
   });
 });
 

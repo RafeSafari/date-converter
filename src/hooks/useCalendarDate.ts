@@ -34,6 +34,23 @@ export const useCalendarDate = (initialDate: Date, initialCalendar: CalendarInfo
     [calendar, month, year],
   );
 
+  const monthOptions = useMemo(
+    () => calendar.component.getMonths(year),
+    [calendar, year],
+  );
+
+  const monthValues = useMemo(
+    () => monthOptions.map(option => option.value),
+    [monthOptions],
+  );
+
+  useEffect(() => {
+    if (monthValues.length > 0 && !monthValues.includes(month)) {
+      const base = month > 12 ? month - 12 : month;
+      setMonth(monthValues.includes(base) ? base : monthValues[monthValues.length - 1]);
+    }
+  }, [month, monthValues]);
+
   useEffect(() => {
     if (daysInMonth > 0 && daysInMonth < day) {
       setDay(daysInMonth);
@@ -51,6 +68,7 @@ export const useCalendarDate = (initialDate: Date, initialCalendar: CalendarInfo
     setYear,
     date,
     daysInMonth,
+    monthOptions,
   };
 };
 

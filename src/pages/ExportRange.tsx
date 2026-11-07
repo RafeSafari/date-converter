@@ -20,7 +20,6 @@ import {
   toCsv,
 } from "utils/exportTable";
 import { thousandSep } from "utils";
-import { createDateWheelHandlers } from "utils/dateSteps";
 
 type ExportFormat = "xlsx" | "csv";
 

@@ -23,7 +23,7 @@ export default class Gregorian implements iCalendar {
     }
   }
 
-  static getMonths(): {name: string, value: number}[] {
+  static getMonths(_year?: number): {name: string, value: number}[] {
     return moment.months().map((month, i) => ({
       value: i+1,
       name: month,

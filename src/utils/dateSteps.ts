@@ -14,8 +14,8 @@ export interface DatePartsSetters {
   setDay: (day: number) => void;
 }
 
-const monthValues = (calendar: CalendarInfo): number[] =>
-  calendar.component.getMonths().map(month => month.value);
+const monthValues = (calendar: CalendarInfo, year: number): number[] =>
+  calendar.component.getMonths(year).map(month => month.value);
 
 const shiftMonth = (
   calendar: CalendarInfo,
@@ -23,7 +23,7 @@ const shiftMonth = (
   month: number,
   direction: 1 | -1,
 ): { year: number; month: number } | null => {
-  const months = monthValues(calendar);
+  const months = monthValues(calendar, year);
   const index = months.indexOf(month);
   if (index === -1) {
     return null;
@@ -34,9 +34,13 @@ const shiftMonth = (
     return { year, month: months[nextIndex] };
   }
 
+  const nextMonths = monthValues(calendar, year + direction);
+  if (nextMonths.length === 0) {
+    return null;
+  }
   return {
     year: year + direction,
-    month: direction > 0 ? months[0] : months[months.length - 1],
+    month: direction > 0 ? nextMonths[0] : nextMonths[nextMonths.length - 1],
   };
 };
 

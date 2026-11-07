@@ -59,7 +59,7 @@ export default class Islamic implements iCalendar {
     return rjdToHijri(dateToRjd(this.date));
   }
 
-  static getMonths(): {name: string, value: number}[] {
+  static getMonths(_year?: number): {name: string, value: number}[] {
     return MONTH_NAMES.map((name, index) => ({ value: index + 1, name }));
   }
 

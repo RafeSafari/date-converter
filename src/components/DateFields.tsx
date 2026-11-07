@@ -22,7 +22,7 @@ interface DateFieldsProps {
 
 const DateFields = ({ label, value }: DateFieldsProps) => {
   const stackInputs = useMediaQuery("(max-width: 319.98px)");
-  const { calendar, changeCalendar, day, setDay, month, setMonth, year, setYear, daysInMonth } = value;
+  const { calendar, changeCalendar, day, setDay, month, setMonth, year, setYear, daysInMonth, monthOptions } = value;
 
   const wheelHandlers = createDateWheelHandlers(
     calendar,
@@ -64,7 +64,7 @@ const DateFields = ({ label, value }: DateFieldsProps) => {
           <Select
             label="ماه"
             options={
-              calendar.component.getMonths().map(item => ({
+              monthOptions.map(item => ({
                 title: item.name,
                 value: item.value,
               }))

@@ -21,10 +21,14 @@ describe("export range table", () => {
   it("builds one row per day with every calendar", () => {
     const { headers, rows } = buildExportTable(localDate("2025-11-07"), localDate("2025-11-08"));
 
-    expect(headers).toEqual(["ردیف", "شمسی", "میلادی", "بدیع", "هجری قمری"]);
+    expect(headers).toEqual(["ردیف", "شمسی", "میلادی", "بدیع", "هجری قمری", "چینی", "هندی", "عبری"]);
     expect(rows).toHaveLength(2);
-    expect(rows[0]).toEqual([1, "1404/08/16", "2025/11/07", "182/13/05", "1447/05/16"]);
-    expect(rows[1]).toEqual([2, "1404/08/17", "2025/11/08", "182/13/06", "1447/05/17"]);
+    expect(rows[0]).toEqual([
+      1, "1404/08/16", "2025/11/07", "182/13/05", "1447/05/16", "2025/09/18", "1947/08/16", "5786/02/16",
+    ]);
+    expect(rows[1]).toEqual([
+      2, "1404/08/17", "2025/11/08", "182/13/06", "1447/05/17", "2025/09/19", "1947/08/17", "5786/02/17",
+    ]);
   });
 
   it("exports exactly the maximum number of days", () => {
@@ -49,9 +53,12 @@ describe("export range table", () => {
 
   it("marks dates outside a calendar's supported range", () => {
     const { rows } = buildExportTable(localDate("1924-08-01"), localDate("1924-08-01"));
+    const chinese = buildExportTable(localDate("2101-06-01"), localDate("2101-06-01"));
 
     expect(rows).toHaveLength(1);
     expect(rows[0][4]).toBe("-");
+    expect(rows[0][5]).not.toBe("-");
+    expect(chinese.rows[0][5]).toBe("-");
   });
 
   it("formats dates for file names", () => {
