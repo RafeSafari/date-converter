@@ -27,11 +27,11 @@ describe("ToolLinks", () => {
     expect(screen.getByRole("link", { name: "خروجی بازه تاریخ" })).toHaveAttribute("href", "/Export");
   });
 
-  it("shows an emoji for each tool", () => {
+  it("shows an icon for each tool", () => {
     renderFooter("export");
 
-    expect(screen.getByText("🔄")).toBeInTheDocument();
-    expect(screen.getByText("📏")).toBeInTheDocument();
-    expect(screen.queryByText("📤")).not.toBeInTheDocument();
+    expect(screen.getByTestId("SwapHorizIcon")).toBeInTheDocument();
+    expect(screen.getByTestId("StraightenIcon")).toBeInTheDocument();
+    expect(screen.queryByTestId("FileDownloadIcon")).not.toBeInTheDocument();
   });
 });

@@ -1,12 +1,17 @@
+import { type ComponentType } from "react";
 import { Link } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
+import type { SvgIconProps } from "@mui/material/SvgIcon";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import StraightenIcon from "@mui/icons-material/Straighten";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 export type ToolId = "conv" | "diff" | "export";
 
-const TOOLS: { id: ToolId; to: string; label: string; emoji: string }[] = [
-  { id: "conv", to: "/Conv", label: "تبدیل تاریخ", emoji: "🔄" },
-  { id: "diff", to: "/Diff", label: "محاسبه فاصله دو تاریخ", emoji: "📏" },
-  { id: "export", to: "/Export", label: "خروجی بازه تاریخ", emoji: "📤" },
+export const TOOLS: { id: ToolId; to: string; label: string; Icon: ComponentType<SvgIconProps> }[] = [
+  { id: "conv", to: "/Conv", label: "تبدیل تاریخ", Icon: SwapHorizIcon },
+  { id: "diff", to: "/Diff", label: "محاسبه فاصله دو تاریخ", Icon: StraightenIcon },
+  { id: "export", to: "/Export", label: "خروجی بازه تاریخ", Icon: FileDownloadIcon },
 ];
 
 const ToolLinks = ({ current }: { current: ToolId }) => (
@@ -33,9 +38,13 @@ const ToolLinks = ({ current }: { current: ToolId }) => (
         color="primary"
         component={Link}
         to={tool.to}
-        sx={{ gap: 0.5, justifyContent: "flex-start", paddingInlineEnd: 1 }}
+        startIcon={<tool.Icon fontSize="small" />}
+        sx={(theme) => ({
+          justifyContent: "flex-start",
+          paddingInlineEnd: 1,
+          color: theme.palette.mode === "dark" ? theme.palette.primary.light : theme.palette.primary.main,
+        })}
       >
-        <span aria-hidden="true">{tool.emoji}</span>
         {tool.label}
       </Button>
     ))}

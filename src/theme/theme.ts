@@ -15,8 +15,8 @@ export const light = createTheme({
     mode: 'light',
     primary: {
       main: '#666cff', // Main primary color
-      light: '#666cff1f', // Light variant
-      dark: '#666cff0d', // Dark variant
+      light: '#8b90ff', // Light variant
+      dark: '#4c53e8', // Dark variant, used for contained hover
     },
     background: {
       default: '#fff', // Default background color
@@ -25,6 +25,9 @@ export const light = createTheme({
     text: {
       primary: '#516377', // Primary text color
       secondary: '#000', // Secondary text color (optional)
+    },
+    action: {
+      hoverOpacity: 0.12,
     },
   },
   components: {
@@ -57,8 +60,8 @@ export const dark = createTheme({
     mode: 'dark',
     primary: {
       main: '#666cff', // Main primary color
-      light: '#666cff3b', // Light variant
-      dark: '#666cff17', // Dark variant
+      light: '#9a9eff', // Light variant, used for text on dark surfaces
+      dark: '#4c53e8', // Dark variant, used for contained hover
     },
     background: {
       default: '#232a3b', // Default background color
@@ -67,6 +70,9 @@ export const dark = createTheme({
     text: {
       primary: '#d8deea', // Primary text color
       secondary: '#fff', // Secondary text color (optional)
+    },
+    action: {
+      hoverOpacity: 0.16,
     },
   },
   components: {
