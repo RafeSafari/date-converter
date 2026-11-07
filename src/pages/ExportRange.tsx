@@ -1,5 +1,4 @@
 import { useMemo, useState, type MouseEvent } from "react";
-import { Link } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -10,6 +9,7 @@ import {
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import DateFields from "components/DateFields";
+import ToolLinks from "components/ToolLinks";
 import toast from "react-hot-toast";
 import { useCalendarDate } from "hooks/useCalendarDate";
 import {
@@ -199,24 +199,7 @@ const ExportRange = () => {
       </Box>
 
       {/* other links */}
-      <Box sx={cardSx}>
-        <Box sx={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          flexWrap: "wrap",
-          width: "100%",
-          gap: 1,
-        }}>
-          <Typography variant="h6" component="h6" width="100%">دیگر ابزار ها</Typography>
-          <Button variant="text" color="primary" component={Link} to="/Conv" sx={{ paddingInlineEnd: 1 }}>
-            تبدیل تاریخ
-          </Button>
-          <Button variant="text" color="primary" component={Link} to="/Diff" sx={{ paddingInlineEnd: 1 }}>
-            محاسبه فاصله دو تاریخ
-          </Button>
-        </Box>
-      </Box>
+      <ToolLinks current="export" />
     </Box>
   );
 };

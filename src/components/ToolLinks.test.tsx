@@ -1,0 +1,37 @@
+import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import ToolLinks, { type ToolId } from "./ToolLinks";
+
+const renderFooter = (current: ToolId) =>
+  render(
+    <MemoryRouter>
+      <ToolLinks current={current} />
+    </MemoryRouter>,
+  );
+
+describe("ToolLinks", () => {
+  it("lists the other tools with links", () => {
+    renderFooter("conv");
+
+    expect(screen.getByRole("heading", { level: 6, name: "دیگر ابزار ها" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "محاسبه فاصله دو تاریخ" })).toHaveAttribute("href", "/Diff");
+    expect(screen.getByRole("link", { name: "خروجی بازه تاریخ" })).toHaveAttribute("href", "/Export");
+    expect(screen.queryByRole("link", { name: "تبدیل تاریخ" })).not.toBeInTheDocument();
+  });
+
+  it("stacks the links vertically", () => {
+    const { container } = renderFooter("diff");
+
+    expect(container.firstElementChild).toHaveStyle({ flexDirection: "column" });
+    expect(screen.getByRole("link", { name: "تبدیل تاریخ" })).toHaveAttribute("href", "/Conv");
+    expect(screen.getByRole("link", { name: "خروجی بازه تاریخ" })).toHaveAttribute("href", "/Export");
+  });
+
+  it("shows an emoji for each tool", () => {
+    renderFooter("export");
+
+    expect(screen.getByText("🔄")).toBeInTheDocument();
+    expect(screen.getByText("📏")).toBeInTheDocument();
+    expect(screen.queryByText("📤")).not.toBeInTheDocument();
+  });
+});
