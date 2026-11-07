@@ -59,7 +59,7 @@ const Select: React.FC<SelectProps> = ({ label, options, onChange, onStepBeyond,
 
   useEffect(() => {
     setSelectedIndex(options.findIndex(option => isEqualObjects(option.value, value)));
-  }, [value]);
+  }, [options, value]);
 
   return (
     <CacheProvider value={cacheRtl}>
