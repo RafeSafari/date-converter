@@ -3,11 +3,11 @@ import CALENDARS from "calendars";
 
 export type CalendarInfo = (typeof CALENDARS)[number];
 
-export const useCalendarDate = (initialDate: Date) => {
-  const [calendar, setCalendar] = useState<CalendarInfo>(CALENDARS[0]);
-  const [day, setDay] = useState(() => new CALENDARS[0].component(initialDate).day());
-  const [month, setMonth] = useState(() => new CALENDARS[0].component(initialDate).month());
-  const [year, setYear] = useState(() => new CALENDARS[0].component(initialDate).year());
+export const useCalendarDate = (initialDate: Date, initialCalendar: CalendarInfo = CALENDARS[0]) => {
+  const [calendar, setCalendar] = useState<CalendarInfo>(initialCalendar);
+  const [day, setDay] = useState(() => new initialCalendar.component(initialDate).day());
+  const [month, setMonth] = useState(() => new initialCalendar.component(initialDate).month());
+  const [year, setYear] = useState(() => new initialCalendar.component(initialDate).year());
 
   const date = useMemo(() => {
     const value = new calendar.component({ year, month, day });
@@ -53,3 +53,5 @@ export const useCalendarDate = (initialDate: Date) => {
     daysInMonth,
   };
 };
+
+export type CalendarDate = ReturnType<typeof useCalendarDate>;

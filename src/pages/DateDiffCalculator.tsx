@@ -1,114 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { Box, Typography, Button, Grid2 as Grid, useMediaQuery } from "@mui/material";
-import Select from "components/Select";
-import TextField from "components/TextField";
-import toast from "react-hot-toast";
+import { Box, Typography, Button } from "@mui/material";
+import DateFields from "components/DateFields";
 import CALENDARS from "calendars";
+import { useCalendarDate } from "hooks/useCalendarDate";
 import moment from "moment";
 import { thousandSep } from "utils";
-import { createDateWheelHandlers } from "utils/dateSteps";
 
 const DateDiffCalculator = () => {
-  const stackInputs = useMediaQuery("(max-width: 319.98px)");
-
-  const [sourceCalendar, setSourceCalendar] = useState(CALENDARS[0]);
-  const [sourceDay, setSourceDay] = useState(1);
-  const [sourceMonth, setSourceMonth] = useState(1);
-  const [sourceYear, setSourceYear] = useState(1400);
-  const [sourceDate, setSourceDate] = useState<Date>(new Date());
-
-  const [targetCalendar, setTargetCalendar] = useState(CALENDARS[1]);
-  const [targetDay, setTargetDay] = useState(1);
-  const [targetMonth, setTargetMonth] = useState(1);
-  const [targetYear, setTargetYear] = useState(2000);
-  const [targetDate, setTargetDate] = useState<Date>(new Date(Date.now() + 7 * 86_400_000)); // next week
-
-  const confirmSelectedDates = () => {
-    try {
-      const _calendar = new sourceCalendar.component({ year: sourceYear, month: sourceMonth, day: sourceDay });
-      if (!_calendar.date) {
-        throw new Error("Invalid date");
-      } else if (_calendar.day() !== sourceDay) {
-        throw new Error("Invalid Day");
-      } else if (_calendar.month() !== sourceMonth) {
-        throw new Error("Invalid Month");
-      } else if (_calendar.year() !== sourceYear) {
-        throw new Error("Invalid Year");
-      } else {
-        setSourceDate(_calendar.date);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("تاریخ مبدأ انتخاب شده صحیح نیست");
-      return;
-    }
-
-    try {
-      const _calendar = new targetCalendar.component({ year: targetYear, month: targetMonth, day: targetDay });
-      if (!_calendar.date) {
-        throw new Error("Invalid date");
-      } else if (_calendar.day() !== targetDay) {
-        throw new Error("Invalid Day");
-      } else if (_calendar.month() !== targetMonth) {
-        throw new Error("Invalid Month");
-      } else if (_calendar.year() !== targetYear) {
-        throw new Error("Invalid Year");
-      } else {
-        setTargetDate(_calendar.date);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("تاریخ مقصد انتخاب شده صحیح نیست");
-      return;
-    }
-  };
-
-  // reinit inputs on source calendar change
-  useEffect(() => {
-    const initialDate = new sourceCalendar.component(sourceDate);
-    setSourceYear(initialDate.year());
-    setSourceMonth(initialDate.month());
-    setSourceDay(initialDate.day());
-  }, [sourceCalendar]);
-
-  // reinit inputs on target calendar change
-  useEffect(() => {
-    const initialDate = new targetCalendar.component(targetDate);
-    setTargetYear(initialDate.year());
-    setTargetMonth(initialDate.month());
-    setTargetDay(initialDate.day());
-  }, [targetCalendar]);
+  const source = useCalendarDate(new Date());
+  const target = useCalendarDate(new Date(Date.now() + 7 * 86_400_000), CALENDARS[1]);
 
   const diffDays = useMemo<number>(() => {
-    return moment(sourceDate).diff(targetDate, "days");
-  }, [targetDate, sourceDate]);
-
-  const sourceDaysInMonth = useMemo(() => sourceCalendar.component.getDaysInMonth(sourceMonth, sourceYear), [sourceMonth, sourceYear]);
-  useEffect(() => {
-    if (sourceDaysInMonth < sourceDay) {
-      setSourceDay(sourceDaysInMonth);
-    }
-  }, [sourceDaysInMonth]);
-
-  const targetDaysInMonth = useMemo(() => targetCalendar.component.getDaysInMonth(targetMonth, targetYear), [targetMonth, targetYear]);
-  useEffect(() => {
-    if (targetDaysInMonth < targetDay) {
-      setTargetDay(targetDaysInMonth);
-    }
-  }, [targetDaysInMonth]);
-
-  const sourceWheelHandlers = createDateWheelHandlers(
-    sourceCalendar,
-    { year: sourceYear, month: sourceMonth, day: sourceDay },
-    { setYear: setSourceYear, setMonth: setSourceMonth, setDay: setSourceDay },
-  );
-
-  const targetWheelHandlers = createDateWheelHandlers(
-    targetCalendar,
-    { year: targetYear, month: targetMonth, day: targetDay },
-    { setYear: setTargetYear, setMonth: setTargetMonth, setDay: setTargetDay },
-  );
+    return moment(source.date).diff(target.date, "days");
+  }, [target.date, source.date]);
 
   return (
     <Box
@@ -139,186 +44,8 @@ const DateDiffCalculator = () => {
           maxWidth: 1000,
         }}
       >
-        {/* source date */}
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 2,
-          }}
-        >
-          <Select
-            label="تاریخ مبدأ"
-            options={CALENDARS.map((calendar) => ({
-              title: (
-                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.25rem", direction: "ltr" }}>
-                  <Typography>{calendar.title}</Typography>
-                  {calendar.title_alt ? <Typography variant="caption">({calendar.title_alt})</Typography> : ""}
-                </Box>
-              ),
-              value: calendar,
-            }))}
-            value={sourceCalendar}
-            onChange={(value) => {
-              setSourceCalendar(value);
-            }}
-            sx={{ width: { xs: "100%", sm: 180 } }}
-          />
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              flexWrap: "wrap",
-              width: { xs: "100%", sm: "auto" },
-              gap: 2,
-            }}
-          >
-            <Grid container spacing={1} sx={{ width: { xs: "100%", sm: "auto" } }}>
-              <Grid size={stackInputs ? 12 : 3} minWidth={stackInputs ? 0 : 70}>
-                <Select
-                  label="روز"
-                  options={Array.from({ length: sourceDaysInMonth }, (_, index) => ({
-                    title: `${index + 1}`,
-                    value: index + 1,
-                  }))}
-                  value={sourceDay}
-                  onChange={(value) => {
-                    setSourceDay(value);
-                  }}
-                  onStepBeyond={sourceWheelHandlers.onDayBoundary}
-                  sx={{ width: "100%" }}
-                />
-              </Grid>
-
-              <Grid size={stackInputs ? 12 : "grow"} minWidth={stackInputs ? 0 : 100}>
-                <Select
-                  label="ماه"
-                  options={sourceCalendar.component.getMonths().map((month) => ({
-                    title: month.name,
-                    value: month.value,
-                  }))}
-                  value={sourceMonth}
-                  onChange={(value) => {
-                    setSourceMonth(value);
-                  }}
-                  onStepBeyond={sourceWheelHandlers.onMonthBoundary}
-                  sx={{ width: "100%" }}
-                />
-              </Grid>
-
-              <Grid size={stackInputs ? 12 : 3} minWidth={stackInputs ? 0 : 70}>
-                <TextField
-                  label="سال"
-                  type="number"
-                  value={sourceYear}
-                  onChange={(value) => {
-                    setSourceYear(Number(value));
-                  }}
-                  sx={{ width: "100%" }}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-
-        {/* target date */}
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 2,
-          }}
-        >
-          <Select
-            label="تاریخ مقصد"
-            options={CALENDARS.map((calendar) => ({
-              title: (
-                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "0.25rem", direction: "ltr" }}>
-                  <Typography>{calendar.title}</Typography>
-                  {calendar.title_alt ? <Typography variant="caption">({calendar.title_alt})</Typography> : ""}
-                </Box>
-              ),
-              value: calendar,
-            }))}
-            value={targetCalendar}
-            onChange={(value) => {
-              setTargetCalendar(value);
-            }}
-            sx={{ width: { xs: "100%", sm: 180 } }}
-          />
-
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              flexWrap: "wrap",
-              width: { xs: "100%", sm: "auto" },
-              gap: 2,
-            }}
-          >
-            <Grid container spacing={1} sx={{ width: { xs: "100%", sm: "auto" } }}>
-              <Grid size={stackInputs ? 12 : 3} minWidth={stackInputs ? 0 : 70}>
-                <Select
-                  label="روز"
-                  options={Array.from({ length: targetDaysInMonth }, (_, index) => ({
-                    title: `${index + 1}`,
-                    value: index + 1,
-                  }))}
-                  value={targetDay}
-                  onChange={(value) => {
-                    setTargetDay(value);
-                  }}
-                  onStepBeyond={targetWheelHandlers.onDayBoundary}
-                  sx={{ width: "100%" }}
-                />
-              </Grid>
-
-              <Grid size={stackInputs ? 12 : "grow"} minWidth={stackInputs ? 0 : 100}>
-                <Select
-                  label="ماه"
-                  options={targetCalendar.component.getMonths().map((month) => ({
-                    title: month.name,
-                    value: month.value,
-                  }))}
-                  value={targetMonth}
-                  onChange={(value) => {
-                    setTargetMonth(value);
-                  }}
-                  onStepBeyond={targetWheelHandlers.onMonthBoundary}
-                  sx={{ width: "100%" }}
-                />
-              </Grid>
-
-              <Grid size={stackInputs ? 12 : 3} minWidth={stackInputs ? 0 : 70}>
-                <TextField
-                  label="سال"
-                  type="number"
-                  value={targetYear}
-                  onChange={(value) => {
-                    setTargetYear(Number(value));
-                  }}
-                  sx={{ width: "100%" }}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-
-
-        <Button variant="contained" color="primary" onClick={confirmSelectedDates} sx={{ width: { xs: "100%", sm: "auto" }, whiteSpace: "nowrap" }}>
-          محاسبه فاصله
-        </Button>
+        <DateFields label="تاریخ مبدأ" value={source} />
+        <DateFields label="تاریخ مقصد" value={target} />
       </Box>
 
       {/* result box */}
@@ -349,19 +76,19 @@ const DateDiffCalculator = () => {
           }}
         >
           <Box
-            key={sourceCalendar.name}
+            key={source.calendar.name}
             sx={{
               display: "flex",
-              flexDirection: "row",
+              flexDirection: { xs: "column", sm: "row" },
               flexWrap: "wrap",
               alignItems: "center",
               justifyContent: "center",
               columnGap: ".35rem",
-              rowGap: ".25rem",
+              rowGap: { xs: ".5rem", sm: ".25rem" },
               width: "100%",
             }}
           >
-            {!new sourceCalendar.component(sourceDate).isValid() || !new targetCalendar.component(targetDate).isValid() ? (
+            {!new source.calendar.component(source.date).isValid() || !new target.calendar.component(target.date).isValid() ? (
               <Typography variant="h6">
                 <Typography variant="caption" color="warning">
                   غیر قابل محاسبه!
@@ -370,7 +97,7 @@ const DateDiffCalculator = () => {
             ) : (
               <>
                 <Box sx={{ display: "inline-flex", alignItems: "baseline", gap: ".25rem", whiteSpace: "nowrap" }}>
-                  {new sourceCalendar.component(sourceDate)
+                  {new source.calendar.component(source.date)
                     .getParts()
                     .reverse()
                     .map((part, i) => (
@@ -379,14 +106,17 @@ const DateDiffCalculator = () => {
                   <Typography variant="caption" color="text.secondary">(مبدأ)</Typography>
                 </Box>
 
-                <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
-                  {diffDays === 0
-                    ? "برابر با"
-                    : `${thousandSep(Math.abs(diffDays))} روز ${diffDays < 0 ? "قبل" : "بعد"} از`}
-                </Typography>
+                <Box sx={{ display: "inline-flex", alignItems: "baseline", gap: ".25rem", whiteSpace: "nowrap" }}>
+                  <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
+                    {diffDays === 0
+                      ? "برابر با"
+                      : `${thousandSep(Math.abs(diffDays))} روز ${diffDays < 0 ? "قبل" : "بعد"}`}
+                  </Typography>
+                  <Typography>از</Typography>
+                </Box>
 
                 <Box sx={{ display: "inline-flex", alignItems: "baseline", gap: ".25rem", whiteSpace: "nowrap" }}>
-                  {new targetCalendar.component(targetDate)
+                  {new target.calendar.component(target.date)
                     .getParts()
                     .reverse()
                     .map((part, i) => (
@@ -395,7 +125,7 @@ const DateDiffCalculator = () => {
                   <Typography variant="caption" color="text.secondary">(مقصد)</Typography>
                 </Box>
 
-                <Typography variant="body2">است</Typography>
+                <Typography>است</Typography>
               </>
             )}
           </Box>

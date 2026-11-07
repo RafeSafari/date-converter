@@ -26,6 +26,16 @@ describe("useCalendarDate", () => {
     expect(partsOf(result.current.date)).toEqual([1404, 8, 16]);
   });
 
+  it("starts from the current date in the requested calendar", () => {
+    const { result } = renderHook(() =>
+      useCalendarDate(new Date(2025, 10, 7), calendarByName("Gregorian")),
+    );
+
+    expect(result.current.calendar.name).toBe("Gregorian");
+    expect([result.current.year, result.current.month, result.current.day]).toEqual([2025, 11, 7]);
+    expect(result.current.date.getTime()).toBe(new Date(2025, 10, 7).getTime());
+  });
+
   it("recomputes the date when the parts change", () => {
     const { result } = renderHook(() => useCalendarDate(new Date(2025, 10, 7)));
 
