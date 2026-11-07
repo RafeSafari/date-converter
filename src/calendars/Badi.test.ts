@@ -7,6 +7,17 @@ const toIso = (calendar: iCalendar): string =>
 const ISO_DAY_MS = 86_400_000;
 
 const references: [number, number, number, string][] = [
+  [1, 1, 1, "1844-03-21"],
+  [1, 1, 19, "1844-04-08"],
+  [1, 18, 19, "1845-02-25"],
+  [1, 20, 1, "1845-02-26"],
+  [1, 20, 4, "1845-03-01"],
+  [1, 19, 1, "1845-03-02"],
+  [1, 19, 19, "1845-03-20"],
+  [2, 1, 1, "1845-03-21"],
+  [4, 20, 5, "1848-03-01"],
+  [56, 20, 4, "1900-03-01"],
+  [57, 1, 1, "1900-03-21"],
   [172, 1, 1, "2015-03-21"],
   [180, 19, 19, "2024-03-19"],
   [181, 1, 1, "2024-03-20"],
@@ -41,6 +52,10 @@ describe("Badi calendar", () => {
   });
 
   it("knows the length of Ayyam-i-Ha in each year", () => {
+    expect(Badi.getDaysInMonth(20, 1)).toBe(4);
+    expect(Badi.getDaysInMonth(20, 4)).toBe(5);
+    expect(Badi.getDaysInMonth(20, 56)).toBe(4);
+    expect(Badi.getDaysInMonth(20, 57)).toBe(4);
     expect(Badi.getDaysInMonth(20, 181)).toBe(4);
     expect(Badi.getDaysInMonth(20, 182)).toBe(5);
   });
@@ -58,6 +73,9 @@ describe("Badi calendar", () => {
     expect(new Badi({ year: 181, month: 21, day: 1 }).isValid()).toBe(false);
     expect(new Badi({ year: 181, month: 1, day: 20 }).isValid()).toBe(false);
     expect(new Badi({ year: 0, month: 1, day: 1 }).isValid()).toBe(false);
+    expect(new Badi({ year: -1, month: 1, day: 1 }).isValid()).toBe(false);
+    expect(new Badi({ year: 508, month: 1, day: 1 }).isValid()).toBe(false);
+    expect(new Badi(new Date("1844-03-20T00:00:00")).isValid()).toBe(false);
   });
 
   it("accepts date parts as arrays, strings and objects consistently", () => {
@@ -78,12 +96,10 @@ describe("Badi calendar", () => {
     }
   });
 
-  it("maps Badi day numbers to local calendar dates", () => {
-    const epoch = Badi.badiDayNumberToStandardDate(45943);
-    expect([epoch.getFullYear(), epoch.getMonth() + 1, epoch.getDate()]).toEqual([1970, 1, 1]);
-
-    const nextDay = Badi.badiDayNumberToStandardDate(45944);
-    expect([nextDay.getFullYear(), nextDay.getMonth() + 1, nextDay.getDate()]).toEqual([1970, 1, 2]);
+  it("maps the Badi epoch to 21 March 1844 for every input form", () => {
+    expect(toIso(new Badi({ year: 1, month: 1, day: 1 }))).toBe("1844-03-21");
+    expect(toIso(new Badi([1, 1, 1]))).toBe("1844-03-21");
+    expect(toIso(new Badi("1/1/1"))).toBe("1844-03-21");
   });
 
   it("matches Gregorian unix days", () => {
@@ -93,8 +109,8 @@ describe("Badi calendar", () => {
     expect(badi.unixDays()).toBe(Math.floor(Date.UTC(2024, 2, 20) / ISO_DAY_MS));
   });
 
-  it("round-trips every day of the last 100 years through Gregorian", () => {
-    const start = Date.UTC(1925, 0, 1);
+  it("round-trips every day from the Badi epoch through Gregorian", () => {
+    const start = Date.UTC(1844, 2, 21);
     const end = Date.UTC(2025, 11, 31);
     let mismatches = 0;
     let checked = 0;
@@ -114,7 +130,7 @@ describe("Badi calendar", () => {
       checked++;
     }
 
-    expect(checked).toBeGreaterThan(36_000);
+    expect(checked).toBeGreaterThan(66_000);
     expect(mismatches).toBe(0);
   });
 

@@ -2,7 +2,6 @@ import { BadiDate } from "badidate-fixed";
 import { parseNumericDate } from "./parse";
 
 const DAY_MS = 86_400_000;
-const BADI_DAY_NUMBER_AT_UNIX_EPOCH = 45943;
 
 export default class Badi implements iCalendar {
   date: Date;
@@ -31,21 +30,11 @@ export default class Badi implements iCalendar {
     if (!badiDate.isValid || badiDate.year !== year || badiDate.month !== month || badiDate.day !== day) {
       return new Date(NaN);
     }
-    return Badi.badiDayNumberToStandardDate(badiDate.valueOf());
-  }
-
-  static badiDayNumberToStandardDate(badiDayNumber: number): Date {
-    if (!Number.isFinite(badiDayNumber)) {
+    const gregorian = badiDate.gregorianDate;
+    if (!gregorian.isValid) {
       return new Date(NaN);
     }
-    const utcDate = new Date((badiDayNumber - BADI_DAY_NUMBER_AT_UNIX_EPOCH) * DAY_MS);
-    const year = utcDate.getUTCFullYear();
-    const month = utcDate.getUTCMonth();
-    const day = utcDate.getUTCDate();
-    if (isNaN(year)) {
-      return new Date(NaN);
-    }
-    return new Date(year, month, day);
+    return new Date(gregorian.year, gregorian.month - 1, gregorian.day);
   }
 
   static getMonths(): {name: string, value: number}[] {
