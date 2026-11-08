@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
-import CALENDARS from "calendars";
-import Chinese from "calendars/Chinese";
-import Jalali from "calendars/Jalali";
+import CALENDARS from "@/calendars";
+import Chinese from "@/calendars/Chinese";
+import Jalali from "@/calendars/Jalali";
 import { useCalendarDate } from "./useCalendarDate";
 
 const partsOf = (date: Date): [number, number, number] => {

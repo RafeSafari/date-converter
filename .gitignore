@@ -9,6 +9,8 @@
 /coverage
 
 # production
+/.next/
+/out/
 /build
 
 # misc
@@ -19,6 +21,8 @@
 .env.production.local
 .wrangler/
 *.stackdump
+*.tsbuildinfo
+next-env.d.ts
 
 npm-debug.log*
 yarn-debug.log*

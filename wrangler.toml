@@ -2,5 +2,5 @@ name = "date-converter"
 compatibility_date = "2026-11-01"
 
 [assets]
-directory = "./build"
-not_found_handling = "single-page-application"
+directory = "./out"
+not_found_handling = "404-page"

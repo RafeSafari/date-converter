@@ -1,4 +1,4 @@
-import CALENDARS from "calendars";
+import CALENDARS from "@/calendars";
 
 export const MAX_EXPORT_DAYS = 1000;
 

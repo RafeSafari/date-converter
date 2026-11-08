@@ -1,5 +1,4 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
 import ExportRange from "./ExportRange";
 
 beforeEach(() => {
@@ -15,12 +14,7 @@ beforeEach(() => {
   }));
 });
 
-const renderPage = () =>
-  render(
-    <MemoryRouter>
-      <ExportRange />
-    </MemoryRouter>,
-  );
+const renderPage = () => render(<ExportRange />);
 
 const yearInputs = () => screen.getAllByRole("spinbutton") as HTMLInputElement[];
 

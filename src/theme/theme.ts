@@ -31,13 +31,6 @@ export const light = createTheme({
     },
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: `
-        html, body {
-          direction: rtl;
-        }
-      `,
-    },
     MuiTypography: {
       styleOverrides: {
         body2: {
@@ -76,13 +69,6 @@ export const dark = createTheme({
     },
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: `
-        html, body {
-          direction: rtl;
-        }
-      `,
-    },
     MuiTypography: {
       styleOverrides: {
         body2: {

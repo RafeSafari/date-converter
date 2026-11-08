@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo, useState, type MouseEvent } from "react";
 import {
   Box,
@@ -8,18 +10,18 @@ import {
   MenuItem,
 } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import DateFields from "components/DateFields";
-import ToolLinks from "components/ToolLinks";
+import DateFields from "@/components/DateFields";
+import ToolLinks from "@/components/ToolLinks";
 import toast from "react-hot-toast";
-import { useCalendarDate } from "hooks/useCalendarDate";
+import { useCalendarDate } from "@/hooks/useCalendarDate";
 import {
   MAX_EXPORT_DAYS,
   buildExportTable,
   countDaysInclusive,
   formatIsoDate,
   toCsv,
-} from "utils/exportTable";
-import { thousandSep } from "utils";
+} from "@/utils/exportTable";
+import { thousandSep } from "@/utils";
 
 type ExportFormat = "xlsx" | "csv";
 
@@ -143,8 +145,6 @@ const ExportRange = () => {
         justifyContent: "center",
       }}
     >
-      <title>خروجی بازه تاریخ</title>
-
       {/* input box */}
       <Box sx={cardSx}>
         <DateFields label="تاریخ شروع" value={start} />

@@ -1,13 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
 import ToolLinks, { type ToolId } from "./ToolLinks";
 
-const renderFooter = (current: ToolId) =>
-  render(
-    <MemoryRouter>
-      <ToolLinks current={current} />
-    </MemoryRouter>,
-  );
+const renderFooter = (current: ToolId) => render(<ToolLinks current={current} />);
 
 describe("ToolLinks", () => {
   it("lists the other tools with links", () => {

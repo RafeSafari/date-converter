@@ -19,7 +19,7 @@ export const isEqualObjects = (obj1: any, obj2: any): boolean => {
   keys2.sort();
 
   // Compare keys and values recursively
-  for (let key of keys1) {
+  for (const key of keys1) {
     if (!keys2.includes(key) || !isEqualObjects(obj1[key], obj2[key])) {
       return false;
     }

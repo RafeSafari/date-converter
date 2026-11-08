@@ -1,30 +1,41 @@
-# Getting Started with Create React App
+# تبدیل تاریخ
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Offline-first date converter built with Next.js (App Router, static export) and Material UI. It converts between the Jalali, Gregorian, Islamic (Umm al-Qura), Badi, Chinese, Saka and Hebrew calendars.
 
 ## Available Scripts
 
-In the project directory, you can run:
+### `npm run dev`
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000).
 
 ### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds a fully static site into `out/` and generates the offline service worker (`out/sw.js`).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### `npm run preview`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Serves the exported site from `out/` with a local static server.
+
+### `npm test`
+
+Runs the Jest test suite.
+
+### `npm run typecheck`
+
+Runs the TypeScript compiler without emitting files.
+
+## Deployment
+
+The site is a static export, deployed as Cloudflare Workers static assets:
+
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
+- Assets directory: `./out` (configured in `wrangler.toml`)
+
+`wrangler.toml` sets `not_found_handling = "404-page"`; each route is prerendered, so no SPA fallback rule is needed.
+
+To enable canonical URLs and the sitemap, set `NEXT_PUBLIC_SITE_URL` (for example `https://example.com`) in the build environment.
+
+## Offline support
+
+Every build precaches the prerendered pages, JS/CSS chunks, fonts and images through a generated service worker. After the first visit the app works offline; a new deployment invalidates the old cache automatically.

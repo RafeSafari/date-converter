@@ -63,7 +63,7 @@ const Select: React.FC<SelectProps> = ({ label, options, onChange, onStepBeyond,
 
   return (
     <CacheProvider value={cacheRtl}>
-      <FormControl ref={selectRef} sx={sx}>
+      <FormControl ref={selectRef} sx={{ minWidth: 0, ...sx }}>
         <InputLabel size={size === "small" ? "small" : "normal"} id="multiple-select-label">
           {label}
         </InputLabel>
@@ -79,7 +79,7 @@ const Select: React.FC<SelectProps> = ({ label, options, onChange, onStepBeyond,
           size={size === "small" ? "small" : "medium"}
         >
           {options.map((option, i) => (
-            <MenuItem key={i} value={i} sx={{ justifyContent: 'flex-end' }}>
+            <MenuItem key={i} value={i} sx={{ justifyContent: 'center' }}>
               {option.title}
             </MenuItem>
           ))}

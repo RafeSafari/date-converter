@@ -1,5 +1,5 @@
 import { type ComponentType } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Box, Button, Typography } from "@mui/material";
 import type { SvgIconProps } from "@mui/material/SvgIcon";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
@@ -37,7 +37,7 @@ const ToolLinks = ({ current }: { current: ToolId }) => (
         variant="text"
         color="primary"
         component={Link}
-        to={tool.to}
+        href={tool.to}
         startIcon={<tool.Icon fontSize="small" />}
         sx={(theme) => ({
           justifyContent: "flex-start",

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import CALENDARS from "calendars";
+import CALENDARS from "@/calendars";
 
 export type CalendarInfo = (typeof CALENDARS)[number];
 

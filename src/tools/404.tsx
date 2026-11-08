@@ -1,5 +1,4 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Box, Typography, Button } from '@mui/material';
 
 const NotFound = () => {
@@ -30,7 +29,7 @@ const NotFound = () => {
         variant="contained" 
         color="primary" 
         component={Link} 
-        to="/" 
+        href="/" 
         sx={{ marginTop: 3 }} // Margin for spacing
       >
         برگشت به خانه

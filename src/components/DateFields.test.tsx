@@ -1,7 +1,7 @@
 import { act, render, screen } from "@testing-library/react";
 import DateFields from "./DateFields";
-import CALENDARS from "calendars";
-import { useCalendarDate } from "hooks/useCalendarDate";
+import CALENDARS from "@/calendars";
+import { useCalendarDate } from "@/hooks/useCalendarDate";
 
 beforeEach(() => {
   window.matchMedia = jest.fn().mockImplementation((query: string) => ({

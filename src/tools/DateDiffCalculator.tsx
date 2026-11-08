@@ -1,11 +1,13 @@
+"use client";
+
 import { useMemo } from "react";
 import { Box, Typography } from "@mui/material";
-import DateFields from "components/DateFields";
-import ToolLinks from "components/ToolLinks";
-import CALENDARS from "calendars";
-import { useCalendarDate } from "hooks/useCalendarDate";
+import DateFields from "@/components/DateFields";
+import ToolLinks from "@/components/ToolLinks";
+import CALENDARS from "@/calendars";
+import { useCalendarDate } from "@/hooks/useCalendarDate";
 import moment from "moment";
-import { thousandSep } from "utils";
+import { thousandSep } from "@/utils";
 
 const DateDiffCalculator = () => {
   const source = useCalendarDate(new Date());
@@ -26,8 +28,6 @@ const DateDiffCalculator = () => {
         justifyContent: "center",
       }}
     >
-      <title>محاسبه فاصله دو تاریخ</title>
-
       {/* input box */}
       <Box
         sx={{

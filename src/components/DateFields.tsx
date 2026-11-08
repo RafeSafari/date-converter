@@ -1,9 +1,9 @@
 import { Box, Typography, useMediaQuery } from "@mui/material";
-import Select from "components/Select";
-import TextField from "components/TextField";
-import CALENDARS from "calendars";
-import type { CalendarDate } from "hooks/useCalendarDate";
-import { createDateWheelHandlers } from "utils/dateSteps";
+import Select from "@/components/Select";
+import TextField from "@/components/TextField";
+import CALENDARS from "@/calendars";
+import type { CalendarDate } from "@/hooks/useCalendarDate";
+import { createDateWheelHandlers } from "@/utils/dateSteps";
 
 const CALENDAR_OPTIONS = CALENDARS.map(calendar => ({
   title: (
@@ -31,18 +31,18 @@ const DateFields = ({ label, value }: DateFieldsProps) => {
   );
 
   return (
-    <Box sx={{ width: "100%", display: "flex", flexWrap: "wrap", gap: 1, alignItems: "center" }}>
-      <Box sx={{ flex: { xs: "1 1 100%", sm: "0 0 180px" } }}>
+    <Box sx={{ width: "100%", maxWidth: "100%", minWidth: 0, display: "flex", flexWrap: "wrap", gap: 1, alignItems: "center" }}>
+      <Box sx={{ flex: { xs: "1 1 100%", sm: "0 0 180px" }, minWidth: 0 }}>
         <Select
           label={label}
           options={CALENDAR_OPTIONS}
           value={calendar}
           onChange={(next) => { changeCalendar(next); }}
-          sx={{ width: "100%" }}
+          sx={{ width: "100%", minWidth: 0 }}
         />
       </Box>
 
-      <Box sx={{ flex: { xs: "1 1 100%", sm: "1 1 0" }, display: "flex", flexWrap: "wrap", gap: 1 }}>
+      <Box sx={{ flex: { xs: "1 1 100%", sm: "1 1 0" }, minWidth: 0, display: "flex", flexWrap: "wrap", gap: 1 }}>
         <Box sx={{ flex: stackInputs ? "1 1 100%" : "1 1 0", minWidth: stackInputs ? 0 : 70 }}>
           <Select
             label="روز"

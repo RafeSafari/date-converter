@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Typography, Button } from '@mui/material';
 import toast from "react-hot-toast";
 import solstice from "astronomia/solstice";
@@ -40,8 +42,6 @@ const Test = () => {
         justifyContent: 'center',
       }}
     >
-      <title>تست</title>
-
       <Box
         sx={{
           backgroundColor: 'background.paper',

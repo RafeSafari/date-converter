@@ -1,4 +1,4 @@
-import CALENDARS from "calendars";
+import CALENDARS from "@/calendars";
 
 type CalendarInfo = (typeof CALENDARS)[number];
 

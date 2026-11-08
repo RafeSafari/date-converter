@@ -1,5 +1,9 @@
 node_modules
+.next
+out
 build
+coverage
+.git
 .dockerignore
 Dockerfile
 npm-debug.log

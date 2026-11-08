@@ -1,8 +1,10 @@
+"use client";
+
 import { Box, Typography } from '@mui/material';
-import DateFields from "components/DateFields";
-import ToolLinks from "components/ToolLinks";
-import CALENDARS from "calendars";
-import { useCalendarDate } from "hooks/useCalendarDate";
+import DateFields from "@/components/DateFields";
+import ToolLinks from "@/components/ToolLinks";
+import CALENDARS from "@/calendars";
+import { useCalendarDate } from "@/hooks/useCalendarDate";
 
 const ConvertDate = () => {
   const source = useCalendarDate(new Date());
@@ -19,8 +21,6 @@ const ConvertDate = () => {
         justifyContent: 'center',
       }}
     >
-      <title>تبدیل تاریخ</title>
-
       {/* input box */}
       <Box
         sx={{
@@ -63,9 +63,19 @@ const ConvertDate = () => {
           alignItems: 'center',
           justifyContent: 'center',
           gap: 2,
+          width: '100%',
+          minWidth: 0,
         }}>
           {CALENDARS.filter(calendar => calendar.name !== source.calendar.name).map(calendar => (
-            <Box key={calendar.name} sx={{display: "flex", flexDirection: "row", gap: 1}}>
+            <Box key={calendar.name} sx={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: 1,
+              maxWidth: "100%",
+              minWidth: 0,
+            }}>
               <Typography variant="h6">
                 {calendar.title}{calendar.title_alt ? <Typography variant="caption"> ({calendar.title_alt})</Typography>: ''}:
               </Typography>
