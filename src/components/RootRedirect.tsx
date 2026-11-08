@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import LoadingScreen from "@/components/LoadingScreen";
 
 export default function RootRedirect() {
   const router = useRouter();
@@ -10,10 +11,5 @@ export default function RootRedirect() {
     router.replace("/Conv/");
   }, [router]);
 
-  return (
-    <div style={{ padding: 24, textAlign: "center" }}>
-      <p>در حال انتقال به صفحه تبدیل تاریخ…</p>
-      <a href="/Conv/">تبدیل تاریخ</a>
-    </div>
-  );
+  return <LoadingScreen message="در حال انتقال به صفحه تبدیل تاریخ…" />;
 }
