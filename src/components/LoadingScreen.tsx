@@ -23,7 +23,7 @@ export default function LoadingScreen({ message = "در حال بارگذاری�
       }}
     >
       <CircularProgress aria-label={message} />
-      <Typography color="text.secondary">{message}</Typography>
+      <Typography color="text.secondary" className="theme-secondary-text">{message}</Typography>
     </Box>
   );
 }

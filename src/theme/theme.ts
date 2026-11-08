@@ -4,7 +4,7 @@ import { createTheme } from '@mui/material/styles';
 const common = {
   direction: 'rtl' as const, // Use 'as const' for TypeScript type inference
   typography: {
-    fontFamily: 'IranSans, Arial, sans-serif',
+    fontFamily: '"IranSans", "IranSans Fallback", Arial, sans-serif',
   },
 };
 

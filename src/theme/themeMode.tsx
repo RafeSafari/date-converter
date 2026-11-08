@@ -13,14 +13,16 @@ export function ThemeModeProvider({ children }: { children: ReactNode }) {
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
-    setIsDark(window.localStorage.getItem("isDarkMode") === "true");
+    const isDarkMode = window.localStorage.getItem("isDarkMode") === "true";
+    setIsDark(isDarkMode);
+    document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
   }, []);
 
   const toggle = () => {
     setIsDark(previous => {
       const next = !previous;
       window.localStorage.setItem("isDarkMode", String(next));
-      document.documentElement.style.backgroundColor = next ? "#232a3b" : "";
+      document.documentElement.dataset.theme = next ? "dark" : "light";
       return next;
     });
   };

@@ -22,7 +22,7 @@ export default function PageIntro({ title, description }: PageIntroProps) {
       <Typography variant="h4" component="h1" gutterBottom>
         {title}
       </Typography>
-      <Typography component="p" color="text.secondary">
+      <Typography component="p" color="text.secondary" className="theme-secondary-text">
         {description}
       </Typography>
     </Box>

@@ -54,11 +54,14 @@ export const viewport: Viewport = {
   themeColor: "#666cff",
 };
 
-const themeScript = `try{if(localStorage.getItem("isDarkMode")==="true"){document.documentElement.style.backgroundColor="#232a3b"}}catch(e){}`;
+const themeScript = `try{document.documentElement.dataset.theme=localStorage.getItem("isDarkMode")==="true"?"dark":"light"}catch(e){document.documentElement.dataset.theme="light"}`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
+      <head>
+        <link rel="preload" href="/IranSans.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+      </head>
       <body>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <Providers>{children}</Providers>

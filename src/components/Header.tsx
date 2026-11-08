@@ -16,7 +16,7 @@ export default function Header() {
   const path = (pathname.replace(/\/$/, "") || "/").toLowerCase();
   const tool = TOOLS.find(item => item.to.toLowerCase() === path);
   const pageTitle = tool?.label ?? PAGE_TITLES[path] ?? "تبدیل تاریخ";
-  const { isDark, toggle } = useThemeMode();
+  const { toggle } = useThemeMode();
 
   return (
     <AppBar position="static" color="primary">
@@ -28,7 +28,8 @@ export default function Header() {
           </Typography>
         </Box>
         <IconButton color="inherit" onClick={toggle} aria-label="Toggle dark mode">
-          {isDark ? <LightMode titleAccess="روشن" /> : <DarkMode titleAccess="تیره" />}
+          <LightMode className="theme-icon-light" titleAccess="روشن" />
+          <DarkMode className="theme-icon-dark" titleAccess="تیره" />
         </IconButton>
       </Toolbar>
     </AppBar>
